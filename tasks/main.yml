@@ -1,0 +1,51 @@
+---
+# tasks file for ansible-nameserver
+- name: ansible-nameserver | check host is in hostfile
+  shell: >
+    set -o pipefail &&
+    cat /etc/hosts | egrep '\s{{ ns_hostname }}\s'
+  register: hostnamedeclared
+  ignore_errors: true
+
+- name: ansible-nameserver | debug hostfile var
+  debug:
+    var: hostnamedeclared
+    verbosity: 3
+
+- name: ansible-nameserver | add host in hosts file
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.0\.1 (.*)'
+    line: '127.0.0.1 {{ ns_hostname }} \1'
+    backrefs: true
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: >
+    hostnamedeclared is failed or
+    hostnamedeclared.rc == 1 or
+    hostnamedeclared.stdout == 0
+
+- name: ansible-nameserver | add IP6 host in hosts file
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^::1 (.*)'
+    line: '::1 {{ ns_hostname }} \1'
+    backrefs: true
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: >
+    hostnamedeclared is failed or
+    hostnamedeclared.rc == 1 or
+    hostnamedeclared.stdout == 0
+
+- name: ansible-nameserver | set hostname
+  include_role:
+    name: tcharl.hostname
+  vars:
+    hostname: "{{ ns_hostname }}"
+    hostname_reboot: false
+    ansible_become: true
