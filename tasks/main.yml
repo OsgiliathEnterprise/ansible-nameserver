@@ -6,6 +6,7 @@
     cat /etc/hosts | egrep '\s{{ ns_hostname }}\s'
   register: hostnamedeclared
   ignore_errors: true
+  changed_when: false
 
 - name: ansible-nameserver | debug hostfile var
   debug:
