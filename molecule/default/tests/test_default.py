@@ -12,14 +12,14 @@ def test_hosts_file(host):
 
 def test_hosts_file_contains_the_new_entry(host):
     command = r"""cat /etc/hosts | \
-    egrep -c '127\.0\.0\.1\sdummy.dum.com\s'"""
+    egrep -c '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\sdummy.dum.com'"""
     cmd = host.run(command)
     assert '1' in cmd.stdout
 
 
 def test_hosts_file_contains_the_new_ip6_entry(host):
     command = r"""cat /etc/hosts | \
-    egrep -c '::1\sdummy.dum.com\s'"""
+    egrep -c '\w{0,4}:\w{0,4}:\w{0,4}:\w{0,4}:\w{0,4}:\w{0,4}\sdummy.dum.com'"""
     cmd = host.run(command)
     assert '1' in cmd.stdout
 
