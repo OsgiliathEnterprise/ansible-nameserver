@@ -19,7 +19,8 @@ def test_hosts_file_contains_the_new_entry(host):
 
 def test_hosts_file_contains_the_new_ip6_entry(host):
     command = r"""cat /etc/hosts | \
-    egrep -c '\w{0,4}:\w{0,4}:\w{0,4}:\w{0,4}:\w{0,4}:\w{0,4}\sdummy.dum.com'"""
+    egrep -c \
+    '\w{0,4}:\w{0,4}:\w{0,4}:\w{0,4}:\w{0,4}:\w{0,4}\sdummy.dum.com'"""
     cmd = host.run(command)
     assert '1' in cmd.stdout
 
