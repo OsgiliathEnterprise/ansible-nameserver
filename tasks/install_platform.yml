@@ -1,0 +1,12 @@
+---
+
+- name: ansible-nameserver | install | docker
+  import_role:
+    name: tcharl.ansible_containerization
+
+- name: ansible-nameserver | install | python-docker
+  package:
+    name:
+     - python-docker
+    state: present
+  become: true

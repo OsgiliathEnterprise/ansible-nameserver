@@ -1,0 +1,52 @@
+---
+
+- name: ansible-nameserver | install | configure firewalld
+  import_role:
+    name: tcharl.ansible_routing
+  vars:
+    firewalld_zones:
+      - name: public
+        masquerade: true
+        enabled_services:
+          - service: dns
+
+- name: ansible-nameserver | install | stops firewalld
+  become: true
+  service:
+    name: firewalld
+    state: stopped
+
+- name: ansible-nameserver | install | restarts dockerd
+  become: true
+  service:
+    name: docker
+    state: restarted
+
+- name: ansible-nameserver | install | bind9 server
+  docker_container:
+    name: bind9
+    image: fike/bind9
+    published_ports:
+      - "53:53"
+      - "53:53/udp"
+    volumes:
+      - "{{ bind_conf_dir }}/named.conf.local:/etc/bind/named.conf.local"
+      - "{{ bind_conf_dir }}/named.conf.options:/etc/bind/named.conf.options"
+      - "{{ bind_zones_dir }}:{{ bind_zones_docker_dir }}"
+    state: started
+    restart_policy: "on-failure"
+    restart_retries: 5
+    healthcheck:
+      test: ["CMD-SHELL", "netstat -an | grep ':53 ' > /dev/null; if [ 0 != $? ]; then exit 1; fi;"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 6s
+  become: true
+  retries: 3
+
+- name: ansible-nameserver | install | stops firewalld
+  become: true
+  service:
+    name: firewalld
+    state: started

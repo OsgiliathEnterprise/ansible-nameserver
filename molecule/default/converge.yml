@@ -3,7 +3,58 @@
   hosts: all
   vars:
     ns_hostname: "dummy.dum.com"
+    bind_acls:
+      - name: lan
+        networks:
+         - 171.0.0.0/24
+    bind_config: true
+    bind_pri_domain_name: "osgiliath.net"
+    bind_forward_zones:
+      - zone: "{{ bind_pri_domain_name }}"
+        expire: 2419200
+        hostmaster: "hostmaster.{{ bind_pri_domain_name }}"
+        masters: []
+        nameservers:
+         - "node0.{{ bind_pri_domain_name }}"
+        records:
+         - name: node0
+           address: 192.168.1.1
+           type: A
+        soa: "host.{{ bind_pri_domain_name }}"
+        refresh: 604800
+        retry: 86400
+        neg_cache_ttl: 604800
+        ttl: 32
+        slaves: []
+    bind_forwarding_server: true
+    bind_forwarders:
+      - 8.8.8.8
+    bind_manage_zones: true
+    bind_reverse_zones:
+      - zone: "169.192"
+        refresh: 604800
+        retry: 86400
+        ttl: 32
+        soa: "{{ ansible_hostname }}.{{ bind_pri_domain_name }}"
+        expire: 2419200
+        hostmaster: "hostmaster.{{ bind_pri_domain_name }}"
+        masters: []
+        nameservers:
+          - "node0.{{ bind_pri_domain_name }}"
+        neg_cache_ttl: 604800
+        slaves: []
+        records:
+          - name: "node0.{{ bind_pri_domain_name }}"
+            address: "2.0"
+
   tasks:
+    - name: "Install bind utils"
+      package:
+        name:
+          - bind-utils
+        state: present
+      become: true
+
     - name: "Include ansible-nameserver"
       include_role:
         name: "ansible-nameserver"
