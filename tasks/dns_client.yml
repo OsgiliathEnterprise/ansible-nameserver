@@ -17,4 +17,3 @@
   loop_control:
     loop_var: masteraddress
   become: true
-
