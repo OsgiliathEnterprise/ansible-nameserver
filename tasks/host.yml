@@ -3,7 +3,7 @@
 - name: ansible-nameserver | host | check host is in hostfile
   shell: >
     set -o pipefail &&
-    cat /etc/hosts | egrep '\s{{ ns_hostname }}\s'
+    cat /etc/hosts | egrep '\s{{ ns_hostname }}'
   register: hostnamedeclared
   ignore_errors: true
   changed_when: false
