@@ -14,6 +14,14 @@ platforms:
     box: tcharl/fedora-31-cgroupv1
     cpus: 2
     memory: 2048
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: yes
+    pre_build_image: yes
+    groups:
+      - bindmasters
+      - bindclient
+
 provisioner:
   name: ansible
   config_options:
