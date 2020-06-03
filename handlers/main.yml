@@ -1,2 +1,44 @@
 ---
 # handlers file for ansible-nameserver
+
+- name: ansible-nameserver | reload bind
+  become: true
+  block:
+    - name: ansible-nameserver | handler | stops firewalld
+      service:
+        name: firewalld
+        state: stopped
+      listen: ansible-nameserver | reload bind
+    - name: ansible-nameserver | handler | restarts dockerd
+      become: true
+      service:
+        name: docker
+        state: restarted
+      listen: ansible-nameserver | reload bind
+    - name: ansible-nameserver | handler | restart bind container
+      docker_container:
+        name: bind9 # todo change
+        state: started
+        restart: true
+        image: fike/bind9
+        published_ports:
+          - "53:53"
+          - "53:53/udp"
+        volumes:
+          - "{{ bind_conf_dir }}/named.conf.local:/etc/bind/named.conf.local"
+          - "{{ bind_conf_dir }}/named.conf.options:/etc/bind/named.conf.options"
+          - "{{ bind_zones_dir }}:{{ bind_zones_docker_dir }}"
+        restart_policy: "always"
+        healthcheck:
+          test: ["CMD-SHELL", "netstat -an | grep ':53 ' > /dev/null; if [ 0 != $? ]; then exit 1; fi;"]
+          interval: 5s
+          timeout: 3s
+          retries: 20
+          start_period: 6s
+      changed_when: false # idempotence
+      listen: ansible-nameserver | reload bind
+    - name: ansible-nameserver | handler | starts firewalld
+      service:
+        name: firewalld
+        state: started
+      listen: ansible-nameserver | reload bind

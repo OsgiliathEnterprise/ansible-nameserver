@@ -1,0 +1,34 @@
+{% if bind_acls is defined %}
+{%   for acl in bind_acls %}
+acl {{ acl['name'] }} {
+{%     for net in acl['networks'] %}
+    {{ net }};
+{%     endfor %}
+};
+{%   endfor %}
+{% endif %}
+{% if bind_clients is defined %}
+acl iaclan {
+{%     for agroup in masterfacts.results %}
+{%       for anip in agroup.ansible_facts.ansible_all_ipv4_addresses %}
+    {{ anip }};
+{%       endfor %}
+{%     endfor %}
+};
+{% endif %}
+options {
+    directory "/var/cache/bind";
+    recursion yes;
+    allow-query { {% if bind_clients is defined %}iaclan;{% endif %} {% for item in bind_acls %}{{ item['name'] }};{% if not loop.last %} {% endif %}{% endfor %} };
+{% if bind_forwarding_server %}
+    forwarders {
+{%   for item in bind_forwarders %}
+        {{ item }};
+{%   endfor %}
+    };
+    forward only;
+{% endif %}
+    dnssec-validation auto;
+    auth-nxdomain no;    # conform to RFC1035
+    listen-on-v6 { any; };
+};

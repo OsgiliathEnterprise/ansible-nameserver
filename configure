@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 
+pip3 install docker-py
+pip3 install docker
+pip3 install python3-docker
+
 molecule dependency

@@ -1,0 +1,19 @@
+---
+- name: ansible-nameserver | dns_client | retreive masters ip
+  setup:
+  register: dnsmasterfacts
+  delegate_to: "{{ groups[bind_masters_group][0] }}"
+
+- name: ansible-nameserver | dns_client | add dns reference in resolv.conf
+  lineinfile:
+    path: /etc/resolv.conf
+    regexp: '^nameserver {{ masteraddress }}'
+    insertbefore: BOF
+    line: 'nameserver {{ masteraddress }}'
+    owner: root
+    group: root
+    mode: '0644'
+  loop: "{{ dnsmasterfacts.ansible_facts.ansible_all_ipv4_addresses }}"
+  loop_control:
+    loop_var: masteraddress
+  become: true

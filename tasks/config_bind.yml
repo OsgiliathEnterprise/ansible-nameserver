@@ -1,0 +1,33 @@
+---
+- name: ansible-nameserver | bind_config | bind directory
+  file:
+    path: "{{ bind_conf_dir }}"
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+  become: true
+
+- name: ansible-nameserver | bind_config | gather all ips of the bind client group
+  setup:
+  loop: "{{ groups[bind_clients] | list }}"
+  loop_control:
+    loop_var: registeredhost
+  delegate_to: "{{ registeredhost }}"
+  register: masterfacts
+
+- name: ansible-nameserver | bind_config | debug all registered IPs
+  debug:
+    var: masterfacts
+    verbosity: 3
+
+- name: ansible-nameserver | bind_config | configuring bind
+  template:
+    src: etc/bind/named.conf.options.j2
+    dest: "{{ bind_conf_dir }}/named.conf.options"
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify:
+    - ansible-nameserver | reload bind
