@@ -9,7 +9,7 @@
         name: firewalld
         state: stopped
       listen: ansible-nameserver | reload bind
-    - name: ansible-nameserver | install | restarts dockerd
+    - name: ansible-nameserver | handler | restarts dockerd
       become: true
       service:
         name: docker
@@ -28,8 +28,7 @@
           - "{{ bind_conf_dir }}/named.conf.local:/etc/bind/named.conf.local"
           - "{{ bind_conf_dir }}/named.conf.options:/etc/bind/named.conf.options"
           - "{{ bind_zones_dir }}:{{ bind_zones_docker_dir }}"
-        restart_policy: "on-failure"
-        restart_retries: 5
+        restart_policy: "always"
         healthcheck:
           test: ["CMD-SHELL", "netstat -an | grep ':53 ' > /dev/null; if [ 0 != $? ]; then exit 1; fi;"]
           interval: 5s

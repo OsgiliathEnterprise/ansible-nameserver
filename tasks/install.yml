@@ -12,12 +12,14 @@
 
 - name: ansible-nameserver | install | stops firewalld
   become: true
+  changed_when: false
   service:
     name: firewalld
     state: stopped
 
 - name: ansible-nameserver | install | restarts dockerd
   become: true
+  changed_when: false
   service:
     name: docker
     state: restarted
@@ -26,6 +28,7 @@
   docker_container:
     name: bind9
     image: fike/bind9
+    restart_policy: "always"
     published_ports:
       - "53:53"
       - "53:53/udp"
@@ -34,8 +37,6 @@
       - "{{ bind_conf_dir }}/named.conf.options:/etc/bind/named.conf.options"
       - "{{ bind_zones_dir }}:{{ bind_zones_docker_dir }}"
     state: started
-    restart_policy: "on-failure"
-    restart_retries: 5
     healthcheck:
       test: ["CMD-SHELL", "netstat -an | grep ':53 ' > /dev/null; if [ 0 != $? ]; then exit 1; fi;"]
       interval: 5s
@@ -43,10 +44,10 @@
       retries: 20
       start_period: 6s
   become: true
-  retries: 3
 
-- name: ansible-nameserver | install | stops firewalld
+- name: ansible-nameserver | install | starts firewalld
   become: true
+  changed_when: false
   service:
     name: firewalld
     state: started
