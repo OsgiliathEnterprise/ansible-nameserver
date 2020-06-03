@@ -49,9 +49,9 @@ def test_resolv_conf_updated(host):
     cmd = host.run(command)
     assert '3' in cmd.stdout
 
+
 def test_lookup_resolves_node_as_client(host):
     command = r"""nslookup node0.osgiliath.net | \
     grep -c '192.168.1.1'"""
     cmd = host.run(command)
     assert '1' in cmd.stdout
-
