@@ -21,7 +21,7 @@ platforms:
     pre_build_image: yes
     groups:
       - bindmasters
-      - bindclient
+      - bindclients
 provisioner:
   name: ansible
   env:
