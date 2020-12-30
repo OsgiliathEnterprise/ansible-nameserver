@@ -12,15 +12,13 @@ lint: yamllint . && flake8 && ansible-lint --exclude=meta
 platforms:
   - name: Fedora-Molecule-nameserver
     box: tcharl/fedora-31-cgroupv1
-    cpus: 2
-    memory: 2048
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    privileged: yes
-    pre_build_image: yes
+    provider_options:
+      driver: '"kvm"'
+      cpus: 2
+      memory: 2048
     groups:
       - bindmasters
-      - bindclient
+      - bindclients
 
 provisioner:
   name: ansible

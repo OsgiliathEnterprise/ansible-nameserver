@@ -14,11 +14,11 @@
   loop_control:
     loop_var: registeredhost
   delegate_to: "{{ registeredhost }}"
-  register: masterfacts
+  register: registeredbindhosts
 
 - name: ansible-nameserver | bind_config | debug all registered IPs
   debug:
-    var: masterfacts
+    var: registeredbindhosts
     verbosity: 3
 
 - name: ansible-nameserver | bind_config | configuring bind

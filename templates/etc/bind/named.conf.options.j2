@@ -9,7 +9,7 @@ acl {{ acl['name'] }} {
 {% endif %}
 {% if bind_clients is defined %}
 acl iaclan {
-{%     for agroup in masterfacts.results %}
+{%     for agroup in registeredbindhosts.results %}
 {%       for anip in agroup.ansible_facts.ansible_all_ipv4_addresses %}
     {{ anip }};
 {%       endfor %}
