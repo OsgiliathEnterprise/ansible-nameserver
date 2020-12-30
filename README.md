@@ -3,7 +3,7 @@ Nameserver
 
 * Galaxy: [![Ansible Galaxy](https://img.shields.io/badge/galaxy-tcharl.ansible_nameserver-660198.svg?style=flat)](https://galaxy.ansible.com/tcharl/ansible_nameserver)
 * Lint,  & requirements: ![Molecule](https://github.com/OsgiliathEnterprise/ansible-nameserver/workflows/Molecule/badge.svg)
-* Tests: [![Build Status](https://travis-ci.org/OsgiliathEnterprise/ansible-nameserver.svg?branch=master)](https://travis-ci.org/OsgiliathEnterprise/ansible-nameserver)
+* Tests: [![Build Status](https://travis-ci.com/OsgiliathEnterprise/ansible-nameserver.svg?branch=master)](https://travis-ci.org/OsgiliathEnterprise/ansible-nameserver)
 * Chat: [![Join the chat at https://gitter.im/OsgiliathEnterprise/platform](https://badges.gitter.im/OsgiliathEnterprise/platform.svg)](https://gitter.im/OsgiliathEnterprise/platform?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This role configures the hostname of the machine and add the entry in /etc/hosts.
