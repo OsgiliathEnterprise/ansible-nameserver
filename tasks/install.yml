@@ -24,6 +24,20 @@
     name: docker
     state: restarted
 
+- name: ansible-nameserver | install | disables resolved-conf loopback
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    insertafter: '^#DNSStubListener=yes'
+    regexp: 'DNSStubListener=no'
+    line: 'DNSStubListener=no'
+  become: yes
+
+- name: ansible-nameserver | install | restarts systemd-resolved
+  become: true
+  service:
+    name: systemd-resolved
+    state: restarted
+
 - name: ansible-nameserver | install | bind9 server
   docker_container:
     name: bind9

@@ -13,7 +13,7 @@
     var: hostnamedeclared
     verbosity: 3
 
-- name: ansible-orchestration | host | gather facts on newly created machines
+- name: ansible-nameserver | host | gather facts on newly created machines
   setup:
   register: hostsfacts
 
