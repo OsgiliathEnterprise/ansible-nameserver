@@ -6,6 +6,7 @@
     recurse: yes
     owner: root
     group: root
+    mode: 0755
   become: true
 
 - name: ansible-nameserver | bind_config | gather all ips of the bind client group
