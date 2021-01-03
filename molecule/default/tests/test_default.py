@@ -30,7 +30,7 @@ def test_resolv_conf_updated(host):
 
 
 def test_lookup_resolves_google(host):
-    command = r"""nslookup google.fr 127.0.0.1 | \
+    command = r"""nslookup google.fr | \
         grep -Pzoc 'Non-authoritative answer:\nName:\s+google.fr'"""
     cmd = host.run(command)
     assert int(cmd.stdout) >= 1

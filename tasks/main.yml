@@ -5,10 +5,10 @@
   include_tasks: install_platform.yml
   when: >
     (
-    bind_masters in group_names and inventory_hostname in groups[bind_masters]
+    bind_masters_group in group_names
     ) or
     (
-    bind_slaves in group_names and inventory_hostname in groups[bind_slaves]
+    bind_slaves_group in group_names
     )
 
 - name: ansible-nameserver | host file configuration
@@ -19,10 +19,10 @@
   when: >
     (
     (
-    bind_masters in group_names and inventory_hostname in groups[bind_masters]
+    bind_masters_group in group_names
     ) or
     (
-    bind_slaves in group_names and inventory_hostname in groups[bind_slaves]
+    bind_slaves_group in group_names
     )
     ) and
     bind_config
@@ -31,10 +31,10 @@
   include_tasks: manage_zones.yml
   when: >
     (
-    bind_masters in group_names and inventory_hostname in groups[bind_masters]
+    bind_masters_group in group_names
     ) or
     (
-    bind_slaves in group_names and inventory_hostname in groups[bind_slaves]
+    bind_slaves_group in group_names
     )
     and
     bind_manage_zones
@@ -43,12 +43,12 @@
   include_tasks: install.yml
   when: >
     (
-    bind_masters in group_names and inventory_hostname in groups[bind_masters]
+    bind_masters_group in group_names
     ) or
     (
-    bind_slaves in group_names and inventory_hostname in groups[bind_slaves]
+    bind_slaves_group in group_names
     )
 
 - name: ansible-nameserver | dns client configuration
   include_tasks: dns_client.yml
-  when: bind_clients in group_names and inventory_hostname in groups[bind_clients]
+  when: bind_clients in group_names

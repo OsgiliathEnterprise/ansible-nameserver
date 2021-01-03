@@ -21,7 +21,16 @@
     state: directory
     mode: 0755
   become: true
-  when: inventory_hostname in groups[bind_masters]
+  when: bind_masters_group in group_names
+
+- name: ansible-nameserver | bind_config | bind directory
+  file:
+    path: "{{ bind_zones_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  become: true
 
 - name: ansible-nameserver | manage_zones | creating forward zones
   template:
@@ -34,7 +43,7 @@
   notify:
     - ansible-nameserver | reload bind
   with_items: "{{ bind_forward_zones }}"
-  when: inventory_hostname in groups[bind_masters]
+  when: bind_masters_group in group_names
 
 - name: ansible-nameserver | manage_zones | creating reverse zones
   template:
@@ -47,4 +56,4 @@
   notify:
     - ansible-nameserver | reload bind
   with_items: "{{ bind_reverse_zones }}"
-  when: inventory_hostname in groups[bind_masters]
+  when: bind_masters_group in group_names

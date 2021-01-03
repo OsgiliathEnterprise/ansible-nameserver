@@ -2,18 +2,22 @@
 - name: ansible-nameserver | dns_client | retreive masters ip
   setup:
   register: dnsmasterssetup
-  delegate_to: "{{ groups[bind_masters][0] }}"
+  delegate_to: "{{ groups[bind_masters_group][0] }}"
 
 - name: ansible-nameserver | dns_client | add dns reference in resolv.conf
   lineinfile:
-    path: /etc/resolv.conf
-    regexp: '^nameserver {{ masteraddress }}'
-    insertbefore: BOF
-    line: 'nameserver {{ masteraddress }}'
+    path: /etc/systemd/resolved.conf
+    regexp: "DNS={{ dnsmasterssetup.ansible_facts.ansible_all_ipv4_addresses | sort | join(' ') }}"
+    insertafter: '^#DNS='
+    line: "DNS={{ dnsmasterssetup.ansible_facts.ansible_all_ipv4_addresses | sort | join(' ') }}"
     owner: root
     group: root
     mode: '0644'
-  loop: "{{ dnsmasterssetup.ansible_facts.ansible_all_ipv4_addresses }}"
-  loop_control:
-    loop_var: masteraddress
+  become: true
+
+- name: ansible-nameserver | install | restarts systemd-resolved
+  service:
+    name: systemd-resolved
+    state: restarted
+  changed_when: false
   become: true

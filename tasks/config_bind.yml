@@ -3,7 +3,6 @@
   file:
     path: "{{ bind_conf_dir }}"
     state: directory
-    recurse: yes
     owner: root
     group: root
     mode: 0755

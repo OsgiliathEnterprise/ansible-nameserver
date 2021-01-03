@@ -15,10 +15,6 @@ platforms:
     box: tcharl/fedora-33-cgroupv1
     memory: 4000
     cpus: 2
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    privileged: yes
-    pre_build_image: yes
     groups:
       - bindmasters
       - bindclients

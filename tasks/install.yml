@@ -33,10 +33,11 @@
   become: yes
 
 - name: ansible-nameserver | install | restarts systemd-resolved
-  become: true
   service:
     name: systemd-resolved
     state: restarted
+  changed_when: false
+  become: true
 
 - name: ansible-nameserver | install | bind9 server
   docker_container:
