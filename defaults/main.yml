@@ -117,7 +117,8 @@ bind_reverse_zones:
   #   ttl: 604800
 
 bind_slaves_group: bindslaves
-bind_zones_dir: /usr/share/dockerdata/bind/zones
+docker_shared_data: /usr/share/dockerdata
+bind_zones_dir: "{{ docker_shared_data }}/bind/zones"
 bind_zones_docker_dir: /etc/bind/zones
 
-bind_conf_dir: /usr/share/dockerdata/bind/conf
+bind_conf_dir: "{{ docker_shared_data }}/bind/conf"

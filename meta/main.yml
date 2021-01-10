@@ -1,6 +1,6 @@
 galaxy_info:
   author: tcharl
-  description: this role configures machine local Hostname (for now :-))
+  description: this role configures machine local Hostname and DNS
   company: Osgiliath
 
   # If the issue tracker for your role is not on github, uncomment the
@@ -30,7 +30,7 @@ galaxy_info:
   platforms:
   - name: Fedora
     versions:
-      - 31
+      - 33
   #   - all
   #   - 25
   # - name: SomePlatform
