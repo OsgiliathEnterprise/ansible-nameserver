@@ -13,8 +13,14 @@ lint: yamllint . && flake8 && ansible-lint --exclude=meta
 platforms:
   - name: Fedora-Molecule-Nameserver
     box: tcharl/fedora-33-cgroupv1
-    memory: 4000
-    cpus: 2
+    provider_options:
+      cpus: 2
+      memory: 4096
+    instance_raw_config_args:
+      - "cache.enable :dnf"
+      - "cache.auto_detect = false"
+    provider_raw_config_args:
+      - "customize ['storagectl', :id, '--name', 'IDE', '--hostiocache', 'on']"
     groups:
       - bindmasters
       - bindclients
