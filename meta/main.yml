@@ -1,5 +1,6 @@
 galaxy_info:
-  author: tcharl
+  role_name: ansible_nameserver
+  author: OsgiliathEnterprise
   description: this role configures machine local Hostname and DNS
   company: Osgiliath
 
