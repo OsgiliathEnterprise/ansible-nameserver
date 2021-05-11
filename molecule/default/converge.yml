@@ -3,6 +3,11 @@
   hosts: all
   vars:
     ns_hostname: "dummy.dum.com"
+    hosts_entries:
+      - name: idm.osgiliath.net
+        ip: 192.168.122.1
+      - name: infra.osgiliath.net
+        ip: 192.168.122.2
     bind_acls:
       - name: lan
         networks:

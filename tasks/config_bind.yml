@@ -1,6 +1,6 @@
 ---
 - name: ansible-nameserver | bind_config | bind directory
-  file:
+  ansible.builtin.file:
     path: "{{ bind_conf_dir }}"
     state: directory
     owner: root

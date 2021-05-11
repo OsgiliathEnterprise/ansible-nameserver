@@ -11,8 +11,8 @@
     bind_slaves_group in group_names
     )
 
-- name: ansible-nameserver | host file configuration
-  include_tasks: host.yml
+- name: ansible-nameserver | host entries
+  include_tasks: host_entries.yml
 
 - name: ansible-nameserver | bind server configuration
   include_tasks: config_bind.yml

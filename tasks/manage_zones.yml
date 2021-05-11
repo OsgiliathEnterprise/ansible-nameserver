@@ -24,7 +24,7 @@
   when: bind_masters_group in group_names
 
 - name: ansible-nameserver | bind_config | bind directory
-  file:
+  ansible.builtin.file:
     path: "{{ bind_zones_dir }}"
     state: directory
     owner: root

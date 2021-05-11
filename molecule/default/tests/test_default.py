@@ -16,6 +16,20 @@ def test_hosts_file_contains_the_new_ip6_entry(host):
     assert int(cmd.stdout) >= 1
 
 
+def test_additional_hostname1_added(host):
+    command = r"""cat /etc/hosts | \
+    egrep -c '^192\.168\.122\.1\s*idm\.osgiliath\.net$'"""
+    cmd = host.run(command)
+    assert '1' in cmd.stdout
+
+
+def test_additional_hostname2_added(host):
+    command = r"""cat /etc/hosts | \
+    egrep -c '^192\.168\.122\.2\s*infra\.osgiliath\.net$'"""
+    cmd = host.run(command)
+    assert '1' in cmd.stdout
+
+
 def test_hostname_is_updated(host):
     command = r"""hostname | \
     egrep -c '^dummy.dum.com$'"""

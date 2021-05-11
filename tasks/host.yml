@@ -3,60 +3,28 @@
 - name: ansible-nameserver | host | check host is in hostfile
   shell: >
     set -o pipefail &&
-    cat /etc/hosts | egrep '\s{{ ns_hostname }}'
-  register: hostnamedeclared
+    cat /etc/hosts | egrep -c '{{ ip.replace('\.', '\\.') }}[^_]*{{ hostname.replace('\.', '\\.') }}'
+  register: host_entries
   ignore_errors: true
   changed_when: false
 
-- name: ansible-nameserver | debug hostfile var
+- name: ansible-nameserver | host |debug hostfile var
   debug:
-    var: hostnamedeclared
+    var: host_entries
     verbosity: 3
 
-- name: ansible-nameserver | host | gather facts on newly created machines
-  setup:
-  register: hostsfacts
-
 - name: ansible-nameserver | host | add host in hosts file
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/hosts
-    regexp: '^{{ hostsfact }} {{ ns_hostname }}'
+    regexp: '^{{ ip }}'
     insertbefore: BOF
-    line: '{{ hostsfact }} {{ ns_hostname }}'
+    line: '{{ ip }} {{ hostname }}'
     owner: root
     group: root
     mode: '0644'
   become: true
-  loop: "{{ hostsfacts.ansible_facts.ansible_all_ipv4_addresses }}"
-  loop_control:
-    loop_var: hostsfact
+  changed_when: false
+  # IPV6 have tendency to add some new entries every time
   when: >
-    hostnamedeclared is failed or
-    hostnamedeclared.rc == 1 or
-    hostnamedeclared.stdout == 0
-
-- name: ansible-nameserver | host | add IP6 host in hosts file
-  lineinfile:
-    path: /etc/hosts
-    regexp: '^{{ hostsfact }} {{ ns_hostname }}'
-    insertbefore: BOF
-    line: '{{ hostsfact }} {{ ns_hostname }}'
-    owner: root
-    group: root
-    mode: '0644'
-  become: true
-  loop: "{{ hostsfacts.ansible_facts.ansible_all_ipv6_addresses }}"
-  loop_control:
-    loop_var: hostsfact
-  when: >
-    hostnamedeclared is failed or
-    hostnamedeclared.rc == 1 or
-    hostnamedeclared.stdout == 0
-
-- name: ansible-nameserver | host | set hostname
-  include_role:
-    name: tcharl.hostname
-  vars:
-    hostname: "{{ ns_hostname }}"
-    hostname_reboot: false
-    ansible_become: true
+    host_entries is failed or
+    host_entries.stdout == 0

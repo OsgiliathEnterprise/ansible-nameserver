@@ -22,6 +22,11 @@ Role Variables
 ### Configuring Host and hostname
 ```
 ns_hostname: "{{ inventory_hostname }}" # default
+hosts_entries: # entries to add to /etc/hosts
+  - name: idm.osgiliath.net
+    ip: 192.168.122.1
+  - name: infra.osgiliath.net
+    ip: 192.168.122.2
 ```
 
 ### Configuring DNS
