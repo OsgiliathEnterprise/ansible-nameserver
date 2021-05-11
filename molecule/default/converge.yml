@@ -8,6 +8,8 @@
         ip: 192.168.122.1
       - name: infra.osgiliath.net
         ip: 192.168.122.2
+      - name: poc.osgiliath.net
+        ip: 192.168.122.2
     bind_acls:
       - name: lan
         networks:
