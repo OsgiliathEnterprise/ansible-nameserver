@@ -1,11 +1,11 @@
 ---
 
 - name: ansible-nameserver | install | docker
-  import_role:
+  ansible.builtin.import_role:
     name: tcharl.ansible_containerization
 
 - name: ansible-nameserver | install | python-docker
-  package:
+  ansible.builtin.package:
     name:
      - python-docker
     state: present

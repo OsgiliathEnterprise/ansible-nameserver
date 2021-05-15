@@ -13,6 +13,7 @@
   loop: "{{ groups[bind_clients] | list }}"
   loop_control:
     loop_var: registeredhost
+  delegate_facts: true
   delegate_to: "{{ registeredhost }}"
   register: registeredbindhosts
 

@@ -20,12 +20,12 @@
 - name: ansible-nameserver | install | restarts dockerd
   become: true
   changed_when: false
-  service:
+  ansible.builtin.service:
     name: docker
     state: restarted
 
 - name: ansible-nameserver | install | disables resolved-conf loopback
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/systemd/resolved.conf
     insertafter: '^#DNSStubListener=yes'
     regexp: 'DNSStubListener=no'
@@ -33,14 +33,14 @@
   become: yes
 
 - name: ansible-nameserver | install | restarts systemd-resolved
-  service:
+  ansible.builtin.service:
     name: systemd-resolved
     state: restarted
   changed_when: false
   become: true
 
 - name: ansible-nameserver | install | bind9 server
-  docker_container:
+  community.general.docker_container:
     name: bind9
     image: fike/bind9
     restart_policy: "always"
@@ -63,6 +63,6 @@
 - name: ansible-nameserver | install | starts firewalld
   become: true
   changed_when: false
-  service:
+  ansible.builtin.service:
     name: firewalld
     state: started
