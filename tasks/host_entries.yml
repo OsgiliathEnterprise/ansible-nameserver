@@ -8,11 +8,11 @@
     hostname_reboot: false
     ansible_become: true
 
-- name: ansible-nameserver | host_entries | host file configuration for ipv4
+- name: ansible-nameserver | host_entries | host file configuration for additional entries
   include_tasks: host.yml
   vars:
     hostname: "{{ entry.name }}"
     ip: "{{ entry.ip }}"
-  loop: "{{ hosts_entries }}"
+  loop: "{{ hosts_entries | default([])}}"
   loop_control:
     loop_var: entry

@@ -87,8 +87,8 @@ hosts_entries: # entries to add to /etc/hosts
 Dependencies
 ------------
 
-  - name: tcharl.hostname
-  - name: tcharl.containerization
+  - name: tcharl.ansible_hostname
+  - name: tcharl.ansible_containerization
   - name: robertdebock.reboot
   - name: robertdebock.bootstrap
   - name: robertdebock.core_dependencies
