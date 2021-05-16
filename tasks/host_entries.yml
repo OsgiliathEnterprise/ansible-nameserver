@@ -1,10 +1,14 @@
 ---
+- name: ansible-nameserver | host | get current hostname
+  command: "hostname"
+  register: machine_hostname
+  changed_when: false
 
 - name: ansible-nameserver | host | set hostname
   include_role:
     name: tcharl.ansible_hostname
   vars:
-    hostname: "{{ ns_hostname }}"
+    hostname: "{{ ns_hostname  | default(machine_hostname.stdout) }}"
     hostname_reboot: false
     ansible_become: true
 
