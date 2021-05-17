@@ -52,4 +52,3 @@
     hosts_ip_entry_exists.stdout == 0) and
     (hosts_entry_exists.rc == 1 or
     hosts_entry_exists.stdout == 0)
-
