@@ -17,7 +17,6 @@
   failed_when: false
   changed_when: false
 
-
 - name: ansible-nameserver | host | add host in hosts file if ip entry does not exists
   ansible.builtin.lineinfile:
     path: /etc/hosts
