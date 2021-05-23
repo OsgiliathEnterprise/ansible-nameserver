@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
 pip3 install docker
+pip3 install netaddr
 
 molecule dependency

@@ -21,7 +21,7 @@ Role Variables
 
 ### Configuring Host and hostname
 ```
-ns_hostname: "{{ inventory_hostname }}" # default
+hostname: "{{ inventory_hostname }}" # default
 hosts_entries: # entries to add to /etc/hosts
   - name: idm.osgiliath.net
     ip: 192.168.122.1
@@ -29,27 +29,27 @@ hosts_entries: # entries to add to /etc/hosts
     ip: 192.168.122.2
 ```
 
-### Configuring DNS
+### Configuring DNS (triggered when your host is in the 'bindmasters' ansible group, can also configure slaves with the 'bindslaves' group)
+
 ```
     bind_acls: # first way of configuring ACLs
       - name: lan
         networks:
          - 171.0.0.0/24
-    bind_clients: bindclient # Second way: adding hosts to these groups
     bind_config: true
-    bind_pri_domain_name: "osgiliath.net"
+    company_domain: "osgiliath.test"
     bind_forward_zones: # configure DNS zone
-      - zone: "{{ bind_pri_domain_name }}"
+      - zone: "{{ company_domain }}"
         expire: 2419200
-        hostmaster: "hostmaster.{{ bind_pri_domain_name }}"
+        hostmaster: "hostmaster.{{ company_domain }}"
         masters: []
         nameservers:
-         - "node0.{{ bind_pri_domain_name }}"
+         - "node0.{{ company_domain }}"
         records:
          - name: node0
            address: 192.168.1.1
            type: A
-        soa: "host.{{ bind_pri_domain_name }}"
+        soa: "host.{{ company_domain }}"
         refresh: 604800
         retry: 86400
         neg_cache_ttl: 604800
@@ -64,25 +64,32 @@ hosts_entries: # entries to add to /etc/hosts
         refresh: 604800
         retry: 86400
         ttl: 32
-        soa: "{{ ansible_hostname }}.{{ bind_pri_domain_name }}"
+        soa: "{{ ansible_hostname }}.{{ company_domain }}"
         expire: 2419200
-        hostmaster: "hostmaster.{{ bind_pri_domain_name }}"
+        hostmaster: "hostmaster.{{ company_domain }}"
         masters: []
         nameservers:
-          - "node0.{{ bind_pri_domain_name }}"
+          - "node0.{{ company_domain }}"
         neg_cache_ttl: 604800
         slaves: []
         records:
-          - name: "node0.{{ bind_pri_domain_name }}"
+          - name: "node0.{{ company_domain }}"
             address: "2.0"
 ```
 
-### Adding the master DNS into a consumer resolv.conf 
+### Adding the master DNS into a consumer resolv.conf (triggered when your host is in the 'bindclients' ansible group)
 
 ```
     bind_clients: bindclient # Will also add a master DNS reference within the client's resolv.conf entries
 ```
 
+### Configuring DNS reverse zone and DNS record for freeipa (triggered when your host is in the 'ipaclients' ansible group) and ensure that there is a dns entry for the hostname, but be sure that ipa is correctly configured before (for example using the tcharl.securehost role)
+
+```
+preferred_nic: eth0 # optional, to compute ip, otherwise will take the default_ipv4
+company_realm_password: admin123 # Freeipa admin password
+company_domain: osgiliath.test
+```
 
 Dependencies
 ------------

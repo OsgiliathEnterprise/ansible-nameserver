@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include Ansible nameserver"
+      include_role:
+        name: "ansible-nameserver"
+      vars:
+        standalone_role: False
+        preferred_nic: "eth1"
+        company_domain: osgiliath.test

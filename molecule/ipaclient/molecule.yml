@@ -1,0 +1,82 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements-collections.yml
+    collections-path: ../community-collections
+    role-file: requirements.yml
+    roles-path: ../community
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint: yamllint . && flake8 && ansible-lint --exclude=meta
+platforms:
+  - name: idm.osgiliath.test
+    box: tcharl/fedora-33-cgroupv1
+    provider_options:
+      cpus: 2
+      memory: 3096
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: dhcp
+      - network_name: forwarded_port
+        guest: 80
+        host: 8080
+      - network_name: forwarded_port
+        guest: 443
+        host: 443
+      - network_name: forwarded_port
+        guest: 53
+        host: 53
+    groups:
+      - ipaservers
+    instance_raw_config_args:
+      - "cache.enable :dnf"
+      - "cache.auto_detect = false"
+    provider_raw_config_args:
+      - "customize ['storagectl', :id, '--name', 'IDE Controller', '--hostiocache', 'on']"
+  - name: client.osgiliath.test
+    box: tcharl/fedora-33-cgroupv1
+    cpus: 2
+    memory: 3096
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: dhcp
+    groups:
+      - ipaclients
+    instance_raw_config_args:
+      - "cache.enable :dnf"
+      - "cache.auto_detect = false"
+    provider_raw_config_args:
+      - "customize ['storagectl', :id, '--name', 'IDE Controller', '--hostiocache', 'on']"
+
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_ROLES_PATH: ${ANSIBLE_ROLES_PATH}:../../../community
+    ANSIBLE_COLLECTIONS_PATH: ${ANSIBLE_COLLECTIONS_PATH}:../community-collections
+verifier:
+  name: testinfra
+  env:
+    PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"
+  options:
+    v: 1
+scenario:
+  name: ipaclient
+  test_sequence:
+    - lint
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+ #   - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy

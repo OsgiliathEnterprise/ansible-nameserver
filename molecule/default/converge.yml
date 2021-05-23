@@ -2,20 +2,21 @@
 - name: Converge
   hosts: all
   vars:
-    ns_hostname: "dummy.dum.com"
+    company_domain: "osgiliath.test"
+    hostname: "dns.osgiliath.test"
     hosts_entries:
-      - name: idm.osgiliath.net
+      - name: idm.oosgiliath.test
         ip: 192.168.122.1
-      - name: infra.osgiliath.net
+      - name: infra.osgiliath.test
         ip: 192.168.122.2
-      - name: poc.osgiliath.net
+      - name: poc.osgiliath.test
         ip: 192.168.122.2
     bind_acls:
       - name: lan
         networks:
          - 171.0.0.0/24
     bind_config: true
-    bind_pri_domain_name: "osgiliath.net"
+    bind_pri_domain_name: "osgiliath.test"
     bind_forward_zones:
       - zone: "{{ bind_pri_domain_name }}"
         expire: 2419200

@@ -7,8 +7,9 @@
 - name: ansible-nameserver | host | set hostname
   include_role:
     name: tcharl.ansible_hostname
+  when: standalone_role
   vars:
-    hostname: "{{ ns_hostname  | default(machine_hostname.stdout) }}"
+    hostname: "{{ hostname  | default(machine_hostname.stdout) }}"
     hostname_reboot: false
     ansible_become: true
 

@@ -81,7 +81,6 @@ bind_manage_zones: false
 
 # Defines Ansible group which defines the Bind masters
 bind_masters_group: bindmasters
-bind_pri_domain_name: vagrant.local
 
 bind_reverse_zones:
   []
@@ -120,5 +119,10 @@ bind_slaves_group: bindslaves
 docker_shared_data: /usr/share/dockerdata
 bind_zones_dir: "{{ docker_shared_data }}/bind/zones"
 bind_zones_docker_dir: /etc/bind/zones
-
 bind_conf_dir: "{{ docker_shared_data }}/bind/conf"
+standalone_role: false
+idm_client_group: 'ipaclients'
+idm_group: 'ipaservers'
+company_domain: "osgiliath.test" # That server's hostname will be ipa."{{ company_domain }}"
+company_realm_password: '123ADMin'
+bind_pri_domain_name: "{{ company_domain }}"
