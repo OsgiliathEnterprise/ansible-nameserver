@@ -17,6 +17,7 @@ addons:
       - dnsmasq-base
       - ebtables
       - virtinst
+      - libvirt-dev
       - libvirt-daemon-system
       - qemu-kvm
       - qemu-utils
