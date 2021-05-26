@@ -16,8 +16,8 @@ addons:
       - bridge-utils
       - dnsmasq-base
       - ebtables
-      - libvirt-bin
-      - libvirt-dev
+      - virtinst
+      - libvirt-daemon-system
       - qemu-kvm
       - qemu-utils
       - ruby-dev
