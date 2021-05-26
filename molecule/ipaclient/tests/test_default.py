@@ -1,5 +1,5 @@
 """Role testing files using testinfra."""
-
+testinfra_hosts = ["idm.osgiliath.test"]
 
 def test_ipa_zone_is_created(host):
     command = r"""set -o pipefail && echo '123ADMin'| \

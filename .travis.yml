@@ -1,6 +1,6 @@
 ---
 
-dist: bionic
+dist: focal
 
 language: python
 python:
@@ -31,12 +31,15 @@ addons:
 install:
   - vagrant plugin install vagrant-libvirt
   - pip install wheel pyopenssl
-  - pip install netaddr python-vagrant yamllint testinfra flake8
+  - pip install netaddr python-vagrant yamllint pytest-testinfra flake8
   - pip install ansible ansible-lint
-  - pip install molecule molecule-vagrant python-vagrant jmespath
+  - pip install molecule molecule-vagrant==0.6.1 python-vagrant jmespath netaddr
   - sudo chmod o+rwx /var/run/libvirt/libvirt-sock
-
-script: travis_wait 50 molecule test --scenario-name kvm
+jobs:
+  include:
+    - env: TEST_SCENARIO=kvm
+    - env: TEST_SCENARIO=ipaclient
+script: travis_wait 50 molecule test --scenario-name $TEST_SCENARIO
 branches:
   only:
     - master

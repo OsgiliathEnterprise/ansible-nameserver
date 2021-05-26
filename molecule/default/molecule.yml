@@ -11,7 +11,7 @@ driver:
   provider:
     name: virtualbox
 
-lint: yamllint . && flake8 && ansible-lint --exclude=meta
+lint: yamllint . && flake8 && ansible-lint --exclude=meta,.cache
 platforms:
   - name: dns.osgiliath.test
     box: tcharl/fedora-33-cgroupv1
