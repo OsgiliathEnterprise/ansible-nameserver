@@ -48,4 +48,5 @@
     a_ip_address: "{{ current_client_ip.msg }}"
     a_create_reverse: yes
     state: present
+  no_log: True
   delegate_to: "{{ groups[idm_group][0] }}" # TODO concat all masters IPs
