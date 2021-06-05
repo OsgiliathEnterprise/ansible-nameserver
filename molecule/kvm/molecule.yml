@@ -31,7 +31,8 @@ provisioner:
       pipelining: true
       ssh_args: -o ControlMaster=auto -o ControlPersist=600s
   env:
-    ANSIBLE_ROLES_PATH: ../../..:../../../community
+    ANSIBLE_ROLES_PATH: ${ANSIBLE_ROLES_PATH}:../../../community
+    ANSIBLE_COLLECTIONS_PATH: ${ANSIBLE_COLLECTIONS_PATH}:../community-collections
 verifier:
   name: testinfra
   env:

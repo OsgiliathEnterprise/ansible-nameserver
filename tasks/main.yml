@@ -56,5 +56,5 @@
 - name: ansible-nameserver | ensure dns for IPA clients
   include_tasks: ipa_dns_client.yml
   when:
-   - idm_client_group | default("") | string in group_names
+   - idm_client_group in group_names
    - not skip_ipa is defined or not skip_ipa
