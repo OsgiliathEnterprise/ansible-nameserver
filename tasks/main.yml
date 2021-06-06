@@ -56,7 +56,7 @@
 
 - name: ansible-nameserver | debug idm_client_group
   debug:
-    var: idm_client_group
+    var: group_names
     verbosity: 2
 
 - name: ansible-nameserver | debug skip_ipa_value
