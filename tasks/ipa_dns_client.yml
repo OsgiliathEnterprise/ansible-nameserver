@@ -1,16 +1,5 @@
 ---
 
-- name: ansible-nameserver | ipa_dns_client | set hostname
-  include_role:
-    name: tcharl.ansible_securehost
-  when: standalone_role
-
-- name: ansible-nameserver | ipa_dns_client | install netaddr
-  ansible.builtin.package:
-    name: python-netaddr
-    state: present
-  become: True
-
 - name: ansible-nameserver | ipa_dns_client | get current hostname
   command: "hostname"
   register: machine_hostname

@@ -1,6 +1,9 @@
 ---
 # tasks file for ansible-nameserver
 
+- name: ansible-nameserver | host entries
+  include_tasks: deps.yml
+
 - name: ansible-nameserver | install
   include_tasks: install_platform.yml
   when: >
