@@ -121,8 +121,8 @@ bind_zones_dir: "{{ docker_shared_data }}/bind/zones"
 bind_zones_docker_dir: /etc/bind/zones
 bind_conf_dir: "{{ docker_shared_data }}/bind/conf"
 standalone_role: false
-idm_client_group: 'ipaclients'
-idm_group: 'ipaservers'
-company_domain: "osgiliath.test" # That server's hostname will be ipa."{{ company_domain }}"
-company_realm_password: '123ADMin'
+idm_client_group: "ipaclients"
+idm_group: "ipaservers"
+company_domain: "osgiliath.test"
+company_realm_password: "123ADMin"
 bind_pri_domain_name: "{{ company_domain }}"

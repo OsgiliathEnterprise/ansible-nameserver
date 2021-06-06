@@ -53,6 +53,19 @@
   include_tasks: dns_client.yml
   when: bind_clients in group_names
 
+
+- name: ansible-nameserver | debug idm_client_group
+  debug:
+    var: idm_client_group
+    verbosity: 2
+
+- name: ansible-nameserver | debug skip_ipa_value
+  debug:
+    var: skip_ipa
+    verbosity: 2
+  when:
+    - skip_ipa is defined
+
 - name: ansible-nameserver | ensure dns for IPA clients
   include_tasks: ipa_dns_client.yml
   when:
