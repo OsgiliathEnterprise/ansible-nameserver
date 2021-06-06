@@ -53,14 +53,13 @@
   include_tasks: dns_client.yml
   when: bind_clients in group_names
 
-
 - name: ansible-nameserver | debug current machine group
   debug:
-    var: group_names
+    msg: "{{ group_names }}"
 
 - name: ansible-nameserver | debug skip_ipa_value
   debug:
-    var: skip_ipa
+    msg: "{{ skip_ipa }}"
   when:
     - skip_ipa is defined
 
