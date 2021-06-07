@@ -9,3 +9,4 @@
         standalone_role: False
         preferred_nic: "eth1"
         company_domain: osgiliath.test
+        secure_logs: False

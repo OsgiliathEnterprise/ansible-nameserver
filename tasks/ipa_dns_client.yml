@@ -2,7 +2,7 @@
 
 - name: ansible-nameserver | ipa_dns_client | get current hostname
   command: "hostname"
-  register: machine_hostname
+  register: nameserver_machine_hostname
   changed_when: false
 
 - name: ansible-securehost | ipa_dns_client-client | retreive current machine ip
@@ -23,19 +23,28 @@
   shell: >
     set -o pipefail && echo '{{ company_realm_password }}' | kinit admin > /dev/null &&
     ipa dnszone-add {{ (current_client_ip.msg | ipsubnet(16) | ansible.netcommon.ipaddr('revdns')) | replace('0.0.','') }}
-  no_log: True
+  no_log: "{{ secure_logs }}"
   failed_when: False
   delegate_to: "{{ groups[idm_group][0] }}"
   changed_when: False
   become: true
 
+- name: ansible-nameserver | ipa_dns_client | allow ptr sync on dns zone
+  shell: >
+    set -o pipefail && echo '{{ company_realm_password }}' | kinit admin > /dev/null &&
+    ipa dnszone-mod --allow-sync-ptr=1 {{ company_domain }}
+  failed_when: False
+  changed_when: False
+  delegate_to: "{{ groups[idm_group][0] }}"
+  no_log: "{{ secure_logs }}"
+
 - name: ansible-nameserver | ipa_dns_client | ensure dns entry is created
   freeipa.ansible_freeipa.ipadnsrecord:
     ipaadmin_password: "{{ company_realm_password }}"
     zone_name: "{{ company_domain }}"
-    name: "{{ (hostname | default(machine_hostname.stdout)) | replace('.' + company_domain, '') }}"
+    name: "{{ (hostname | default(nameserver_machine_hostname.stdout)) | replace('.' + company_domain, '') }}"
     a_ip_address: "{{ current_client_ip.msg }}"
     a_create_reverse: yes
     state: present
-  no_log: True
+  no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}" # TODO concat all masters IPs

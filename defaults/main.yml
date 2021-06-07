@@ -126,3 +126,4 @@ idm_group: "ipaservers"
 company_domain: "osgiliath.test"
 company_realm_password: "123ADMin"
 bind_pri_domain_name: "{{ company_domain }}"
+secure_logs: Yes

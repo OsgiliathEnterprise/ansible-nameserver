@@ -8,7 +8,7 @@
 
 - name: ansible-nameserver | host | get current hostname
   command: "hostname"
-  register: machine_hostname
+  register: nameserver_machine_hostname
   changed_when: false
 
 - name: ansible-nameserver | host | set hostname
@@ -16,7 +16,7 @@
     name: tcharl.ansible_hostname
   when: standalone_role
   vars:
-    hostname: "{{ hostname  | default(machine_hostname.stdout) }}"
+    hostname: "{{ hostname  | default(nameserver_machine_hostname.stdout) }}"
     hostname_reboot: false
     ansible_become: true
 
