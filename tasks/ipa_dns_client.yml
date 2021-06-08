@@ -17,12 +17,12 @@
 
 - name: ansible-securehost | freeipa-ipa_dns_client | debug dns zone creation
   ansible.builtin.debug:
-    msg: "echo '{{ (current_client_ip.msg | ipsubnet(16) | ansible.netcommon.ipaddr('revdns')) | replace('0.0.','0/16.0.') }}' | ipa dnszone-add --name-from-ip={{ current_client_ip.msg | ipsubnet(16) }}"
+    msg: "echo '{{ (current_client_ip.msg | ipsubnet(16) | ansible.netcommon.ipaddr('revdns')) | replace('0.0.','') }}' | ipa dnszone-add --name-from-ip={{ current_client_ip.msg | ipsubnet(16) }}"
 
 - name: ansible-nameserver | ipa_dns_client | ensure reverse zone is created
   shell: >
     set -o pipefail && echo '{{ company_realm_password }}' | kinit admin > /dev/null &&
-    ipa dnszone-add {{ (current_client_ip.msg | ipsubnet(16) | ansible.netcommon.ipaddr('revdns')) | replace('0.0.','0/16.0.') }}
+    ipa dnszone-add {{ (current_client_ip.msg | ipsubnet(16) | ansible.netcommon.ipaddr('revdns')) | replace('0.0.','') }}
   no_log: "{{ secure_logs }}"
   failed_when: False
   delegate_to: "{{ groups[idm_group][0] }}"
