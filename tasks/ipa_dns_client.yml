@@ -43,8 +43,8 @@
     ipaadmin_password: "{{ company_realm_password }}"
     zone_name: "{{ company_domain }}"
     name: "{{ (hostname | default(nameserver_machine_hostname.stdout)) | replace('.' + company_domain, '') }}"
-    a_ip_address: "{{ current_client_ip.msg }}"
-    a_create_reverse: yes
+    a_rec: "{{ current_client_ip.msg }}"
+    create_reverse: yes
     state: present
   no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}" # TODO concat all masters IPs
