@@ -6,12 +6,12 @@
     state: present
   become: True
 
-- name: ansible-nameserver | host | get current hostname
+- name: ansible-nameserver | deps | get current hostname
   command: "hostname"
   register: nameserver_machine_hostname
   changed_when: false
 
-- name: ansible-nameserver | host | set hostname
+- name: ansible-nameserver | deps | set hostname
   include_role:
     name: tcharl.ansible_hostname
   when: standalone_role
@@ -20,7 +20,17 @@
     hostname_reboot: false
     ansible_become: true
 
-- name: ansible-nameserver | ipa_dns_client | set hostname
+- name: ansible-nameserver | deps | set hostname
   import_role:
     name: tcharl.ansible_securehost
   when: standalone_role
+
+- name: ansible-nameserver | deps | retreive current machine ip
+  setup:
+  register: current_host_facts
+  delegate_facts: true
+
+- name: ansible-securehost | ipa_dns_client | compute ip if preferred_nic is not set
+  ansible.builtin.debug:
+    msg: "{{ current_host_facts.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else current_host_facts.ansible_facts.ansible_default_ipv4.address | default(current_host_facts.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
+  register: current_host_ip

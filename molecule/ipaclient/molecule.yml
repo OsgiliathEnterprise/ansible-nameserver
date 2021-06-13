@@ -10,26 +10,17 @@ driver:
   name: vagrant
   provider:
     name: virtualbox
-lint: yamllint . && flake8 && ansible-lint --exclude=meta,.cache
+lint: yamllint . && flake8 && ansible-lint --exclude=meta
 platforms:
   - name: idm.osgiliath.test
     box: tcharl/fedora-33-cgroupv1
-    provider_options:
-      cpus: 2
-      memory: 3096
     interfaces:
       - auto_config: true
         network_name: private_network
         type: dhcp
-      - network_name: forwarded_port
-        guest: 80
-        host: 8080
-      - network_name: forwarded_port
-        guest: 443
-        host: 443
-      - network_name: forwarded_port
-        guest: 53
-        host: 53
+    provider_options:
+      cpus: 2
+      memory: 3096
     groups:
       - ipaservers
     instance_raw_config_args:
@@ -67,15 +58,15 @@ verifier:
 scenario:
   name: ipaclient
   test_sequence:
-    - lint
     - dependency
+    - lint
     - cleanup
     - destroy
     - syntax
     - create
     - prepare
     - converge
- #   - idempotence
+    # - idempotence
     - side_effect
     - verify
     - cleanup
