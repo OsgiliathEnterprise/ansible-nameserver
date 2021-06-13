@@ -10,7 +10,7 @@ driver:
   name: vagrant
   provider:
     name: libvirt
-lint: yamllint . && flake8 && ansible-lint --exclude=meta,.cache
+lint: yamllint . && flake8 && ansible-lint
 platforms:
   - name: dns.osgiliath.test
     box: tcharl/fedora-33-cgroupv1

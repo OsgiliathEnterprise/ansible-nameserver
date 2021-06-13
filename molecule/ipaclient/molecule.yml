@@ -10,7 +10,7 @@ driver:
   name: vagrant
   provider:
     name: virtualbox
-lint: yamllint . && flake8 && ansible-lint --exclude=meta
+lint: yamllint . && flake8 && ansible-lint
 platforms:
   - name: idm.osgiliath.test
     box: tcharl/fedora-33-cgroupv1

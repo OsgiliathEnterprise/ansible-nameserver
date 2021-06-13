@@ -3,6 +3,10 @@
 
 - name: ansible-nameserver | host entries
   include_tasks: deps.yml
+  when: standalone_role
+
+- name: ansible-nameserver | prerequisites
+  include_tasks: prereq.yml
 
 - name: ansible-nameserver | install
   include_tasks: install_platform.yml

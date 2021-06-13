@@ -11,7 +11,7 @@ driver:
   provider:
     name: virtualbox
 
-lint: yamllint . && flake8 && ansible-lint --exclude=meta,.cache
+lint: yamllint . && flake8 && ansible-lint
 platforms:
   - name: dns.osgiliath.test
     box: tcharl/fedora-33-cgroupv1
@@ -29,7 +29,8 @@ platforms:
 provisioner:
   name: ansible
   env:
-    ANSIBLE_ROLES_PATH: ../../..:../../../community
+    ANSIBLE_ROLES_PATH: ${ANSIBLE_ROLES_PATH}:../../../community
+    ANSIBLE_COLLECTIONS_PATH: ${ANSIBLE_COLLECTIONS_PATH}:../community-collections
 verifier:
   name: testinfra
   env:
@@ -39,8 +40,8 @@ verifier:
 scenario:
   name: default
   test_sequence:
-    - lint
     - dependency
+    - lint
     - cleanup
     - destroy
     - syntax
