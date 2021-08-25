@@ -39,4 +39,3 @@ roles:
 
   - name: robertdebock.epel
     source: https://galaxy.ansible.com
-
