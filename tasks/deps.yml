@@ -1,10 +1,14 @@
 ---
+- name: ansible-nameserver | deps | compute hostname
+  ansible.builtin.debug:
+    msg: "{{ hostname | default(nameserver_machine_hostname.stdout) }}"
+  register: nameserver_computed_host
 
 - name: ansible-nameserver | deps | set hostname
   include_role:
     name: tcharl.ansible_hostname
   vars:
-    hostname: "{{ hostname  | default(nameserver_machine_hostname.stdout) }}"
+    hostname: "{{ nameserver_computed_host.stdout }}"
     hostname_reboot: false
     ansible_become: true
 
