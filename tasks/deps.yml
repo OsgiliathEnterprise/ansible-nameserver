@@ -8,7 +8,7 @@
   include_role:
     name: tcharl.ansible_hostname
   vars:
-    hostname: "{{ nameserver_computed_host.stdout }}"
+    hostname: "{{ nameserver_computed_host.msg }}"
     hostname_reboot: false
     ansible_become: true
 
