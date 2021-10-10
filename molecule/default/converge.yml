@@ -65,4 +65,4 @@
 
     - name: "Include ansible-nameserver"
       include_role:
-        name: "ansible-nameserver"
+        name: tcharl.ansible_nameserver

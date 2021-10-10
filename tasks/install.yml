@@ -9,6 +9,8 @@
         masquerade: true
         enabled_services:
           - service: dns
+  tags:
+    - dependency
 
 - name: ansible-nameserver | install | stops firewalld
   become: true

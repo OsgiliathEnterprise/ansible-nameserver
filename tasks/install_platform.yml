@@ -3,6 +3,8 @@
 - name: ansible-nameserver | install | docker
   ansible.builtin.import_role:
     name: tcharl.ansible_containerization
+  tags:
+    - dependency
 
 - name: ansible-nameserver | install | python-docker
   ansible.builtin.package:

@@ -11,7 +11,13 @@
     hostname: "{{ nameserver_computed_host.msg }}"
     hostname_reboot: false
     ansible_become: true
+  tags:
+    - dependency
 
-- name: ansible-nameserver | deps | set hostname
+- name: ansible-nameserver | deps | import securehost
   import_role:
     name: tcharl.ansible_securehost
+  when: |
+    idm_group | default("") | string in group_names or idm_client_group | default("") | string in group_names
+  tags:
+    - dependency
