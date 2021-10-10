@@ -17,7 +17,7 @@
   failed_when: false
   changed_when: false
 
-- name: ansible-nameserver | host | add host in hosts file if ip entry does not exists
+- name: "ansible-nameserver | host | add host {{ hostname }} in hosts file if ip {{ ip }} entry does not exists"
   ansible.builtin.lineinfile:
     path: /etc/hosts
     regexp: '^{{ ip }}(.*)$'
@@ -34,7 +34,7 @@
     - hosts_ip_entry_exists.stdout != 0
     - hosts_entry_exists.rc == 1 or hosts_entry_exists.stdout == 0
 
-- name: ansible-nameserver | host | add host in hosts file if ip_entry does not exist
+- name: "ansible-nameserver | host | add host {{ hostname }} in hosts file if ip_entry {{ ip }} does not exist"
   ansible.builtin.lineinfile:
     path: /etc/hosts
     insertbefore: BOF

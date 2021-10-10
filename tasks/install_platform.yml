@@ -4,7 +4,7 @@
   ansible.builtin.import_role:
     name: tcharl.ansible_containerization
   tags:
-    - dependency
+    - standalone
 
 - name: ansible-nameserver | install | python-docker
   ansible.builtin.package:

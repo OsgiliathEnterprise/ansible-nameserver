@@ -62,6 +62,15 @@
   include_tasks: dns_client.yml
   when: bind_clients in group_names
 
+- name: ansible-nameserver | freeipa dependences
+  ansible.builtin.include_tasks: freeipa-deps.yml
+  when:
+   - standalone_role is defined
+   - standalone_role
+   - not skip_ipa is defined or not skip_ipa
+  tags:
+    - standalone
+    -
 - name: ansible-nameserver | ensure dns for IPA clients
   include_tasks: ipa_dns_client.yml
   when:

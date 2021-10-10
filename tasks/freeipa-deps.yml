@@ -1,0 +1,8 @@
+---
+- name: ansible-nameserver | freeipa-deps | import securehost
+  import_role:
+    name: tcharl.ansible_securehost
+  when: |
+    idm_group | default("") | string in group_names or idm_client_group | default("") | string in group_names
+  tags:
+    - dependency

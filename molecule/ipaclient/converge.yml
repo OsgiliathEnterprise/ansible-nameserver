@@ -4,7 +4,7 @@
   tasks:
     - name: "Include Ansible nameserver"
       include_role:
-        name: tcharl.ansible-nameserver
+        name: tcharl.ansible_nameserver
       vars:
         standalone_role: False
         preferred_nic: "eth1"

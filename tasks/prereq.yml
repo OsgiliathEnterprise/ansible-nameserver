@@ -1,4 +1,8 @@
 ---
+- name: ansible-nameserver | deps | compute hostname
+  ansible.builtin.debug:
+    msg: "{{ hostname | default(nameserver_machine_hostname.stdout) }}"
+  register: nameserver_computed_host
 
 - name: ansible-nameserver | prereq | install netaddr
   ansible.builtin.package:
