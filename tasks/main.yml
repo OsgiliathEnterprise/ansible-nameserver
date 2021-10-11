@@ -5,7 +5,7 @@
   include_tasks: prereq.yml
 
 - name: ansible-nameserver | host entries
-  include_tasks: deps.yml
+  include_tasks: requirements.yml
   when: standalone_role
   tags:
     - standalone
