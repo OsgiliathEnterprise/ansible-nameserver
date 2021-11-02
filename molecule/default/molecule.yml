@@ -30,7 +30,7 @@ provisioner:
   name: ansible
   env:
     ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/..:${MOLECULE_PROJECT_DIRECTORY}/../community:${ANSIBLE_ROLES_PATH}"
-    ANSIBLE_COLLECTIONS_PATH: ${MOLECULE_PROJECT_DIRECTORY}/../community-collections:${ANSIBLE_COLLECTIONS_PATH}
+    ANSIBLE_COLLECTIONS_PATH: "${MOLECULE_PROJECT_DIRECTORY}/../community-collections:${ANSIBLE_COLLECTIONS_PATH}"
 verifier:
   name: testinfra
   env:
