@@ -94,11 +94,7 @@ company_domain: osgiliath.test
 Dependencies
 ------------
 
-  - name: tcharl.ansible_hostname
-  - name: tcharl.ansible_containerization
-  - name: robertdebock.reboot
-  - name: robertdebock.bootstrap
-  - name: robertdebock.core_dependencies
+see [requirements file](./requirements.yml) and [requirement collection file](./requirements-collections.yml)
 
 License
 -------
