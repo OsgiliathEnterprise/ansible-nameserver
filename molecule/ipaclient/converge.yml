@@ -1,12 +1,10 @@
 ---
 - name: Converge
   hosts: all
-  tasks:
-    - name: "Include Ansible nameserver"
-      include_role:
-        name: tcharl.ansible_nameserver
-      vars:
-        standalone_role: False
-        preferred_nic: "eth1"
-        company_domain: osgiliath.test
-        secure_logs: False
+  vars:
+    standalone_role: False
+    preferred_nic: "eth1"
+    company_domain: osgiliath.test
+    secure_logs: False
+  roles:
+    - role: tcharl.ansible_nameserver

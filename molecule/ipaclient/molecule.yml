@@ -17,7 +17,7 @@ lint: |
   ANSIBLE_ROLES_PATH=${MOLECULE_PROJECT_DIRECTORY}/../community ANSIBLE_COLLECTIONS_PATH=${MOLECULE_PROJECT_DIRECTORY}/../community-collections ansible-lint
 platforms:
   - name: idm.osgiliath.test
-    box: fedora/34-cloud-base
+    box: fedora/35-cloud-base
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -30,7 +30,7 @@ platforms:
     provider_raw_config_args:
       - "customize ['storagectl', :id, '--name', 'IDE', '--hostiocache', 'on']"
   - name: client.osgiliath.test
-    box: fedora/34-cloud-base
+    box: fedora/35-cloud-base
     cpus: 2
     memory: 3096
     interfaces:

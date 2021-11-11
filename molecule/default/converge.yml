@@ -62,7 +62,5 @@
           - bind-utils
         state: present
       become: true
-
-    - name: "Include ansible-nameserver"
-      include_role:
-        name: tcharl.ansible_nameserver
+  roles:
+    - role: tcharl.ansible_nameserver
