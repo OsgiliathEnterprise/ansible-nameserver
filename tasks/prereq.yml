@@ -6,7 +6,7 @@
   become: True
 
 - name: ansible-nameserver | prereq | get current hostname
-  command: "hostname"
+  ansible.builtin.command: "hostname"
   register: nameserver_machine_hostname
   changed_when: false
 
@@ -16,7 +16,7 @@
   register: nameserver_computed_host
 
 - name: ansible-nameserver | prereq | retreive current machine ip
-  setup:
+  ansible.builtin.setup:
   register: current_host_facts
   delegate_facts: true
 

@@ -1,7 +1,7 @@
 ---
 
 - name: ansible-nameserver | install | configure firewalld
-  include_role:
+  ansible.builtin.include_role:
     name: tcharl.ansible_routing
   vars:
     firewalld_zones:
@@ -15,7 +15,7 @@
 - name: ansible-nameserver | install | stops firewalld
   become: true
   changed_when: false
-  service:
+  ansible.builtin.service:
     name: firewalld
     state: stopped
 

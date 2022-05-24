@@ -5,18 +5,18 @@
   become: true
   block:
     - name: ansible-nameserver | handler | stops firewalld
-      service:
+      ansible.builtin.service:
         name: firewalld
         state: stopped
       listen: ansible-nameserver | reload bind
     - name: ansible-nameserver | handler | restarts dockerd
       become: true
-      service:
+      ansible.builtin.service:
         name: docker
         state: restarted
       listen: ansible-nameserver | reload bind
     - name: ansible-nameserver | handler | restart bind container
-      docker_container:
+      community.docker.docker_container:
         name: bind9 # todo change
         state: started
         restart: true
@@ -38,7 +38,7 @@
       changed_when: false # idempotence
       listen: ansible-nameserver | reload bind
     - name: ansible-nameserver | handler | starts firewalld
-      service:
+      ansible.builtin.service:
         name: firewalld
         state: started
       listen: ansible-nameserver | reload bind

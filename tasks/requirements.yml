@@ -1,6 +1,6 @@
 ---
 - name: ansible-nameserver | deps | set hostname
-  include_role:
+  ansible.builtin.include_role:
     name: tcharl.ansible_hostname
   vars:
     hostname: "{{ nameserver_computed_host.msg }}"

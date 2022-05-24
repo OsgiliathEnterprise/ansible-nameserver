@@ -1,20 +1,41 @@
 ---
 - name: ansible-nameserver | dns_client | retreive masters ip
-  ansible.builtin.setup:
+  community.docker.docker_container_info:
+    name: "bind9"
+  become: true
   register: dnsmasterssetup
   delegate_facts: true
   delegate_to: "{{ groups[bind_masters_group][0] }}"
 
-- name: ansible-nameserver | dns_client | add dns reference in resolv.conf
-  ansible.builtin.lineinfile:
-    path: /etc/systemd/resolved.conf
-    regexp: "DNS={{ dnsmasterssetup.ansible_facts.ansible_all_ipv4_addresses | sort | join(' ') }}"
-    insertafter: '^#DNS='
-    line: "DNS={{ dnsmasterssetup.ansible_facts.ansible_all_ipv4_addresses | sort | join(' ') }}"
+- name: ansible-nameserver | dns_client | debug masters ip
+  ansible.builtin.debug:
+    msg: "{{ dnsmasterssetup }}"
+
+- name: ansible-nameserver | dns_client | compute master ip if preferred_nic is not set
+  ansible.builtin.debug:
+    msg: "{{ dnsmasterssetup.container.NetworkSettings.IPAddress }}"
+  register: dns_master_ip
+
+- name: ansible-nameserver | ipa_dns_client | create resolved.conf.d directory
+  become: true
+  ansible.builtin.file:
+    state: directory
+    dest: '/etc/systemd/resolved.conf.d'
+    mode: "0755"
+
+- name: ansible-nameserver | ipa_dns_client | add internal domain dns
+  ansible.builtin.template:
+    src: systemd-resolved.conf.d/head.j2
+    dest: /etc/systemd/resolved.conf.d/head.conf
     owner: root
     group: root
-    mode: '0644'
+    mode: 0644
   become: true
+  vars:
+    dns_master_ip_to_set: "{{ dns_master_ip.msg }}"
+    domain: "{{ company_domain }}"
+  notify:
+    - ansible-nameserver | reload bind
 
 - name: ansible-nameserver | install | restarts systemd-resolved
   ansible.builtin.service:

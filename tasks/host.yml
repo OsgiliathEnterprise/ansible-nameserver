@@ -1,6 +1,6 @@
 ---
 - name: ansible-nameserver | host | check ip is in hostfile
-  shell: >
+  ansible.builtin.shell: >
     set -o pipefail &&
     cat /etc/hosts | egrep -c '{{ ip.replace('\.', '\\.') }}'
   register: hosts_ip_entry_exists
@@ -9,7 +9,7 @@
   changed_when: false
 
 - name: ansible-nameserver | host | check ip and hostname is in hostfile
-  shell: >
+  ansible.builtin.shell: >
     set -o pipefail &&
     cat /etc/hosts | egrep -c '{{ ip.replace('\.', '\\.') }}.*{{ hostname.replace('\.', '\\.') }}'
   register: hosts_entry_exists

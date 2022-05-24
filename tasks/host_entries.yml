@@ -1,7 +1,7 @@
 ---
 
 - name: ansible-nameserver | host_entries | host file configuration for additional entries
-  include_tasks: host.yml
+  ansible.builtin.include_tasks: host.yml
   vars:
     hostname: "{{ entry.name }}"
     ip: "{{ entry.ip }}"

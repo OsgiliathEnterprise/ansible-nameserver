@@ -1,17 +1,16 @@
 ---
-# tasks file for ansible-nameserver
 
 - name: ansible-nameserver | prerequisites
-  include_tasks: prereq.yml
+  ansible.builtin.include_tasks: prereq.yml
 
 - name: ansible-nameserver | host entries
-  include_tasks: requirements.yml
+  ansible.builtin.include_tasks: requirements.yml
   when: standalone_role
   tags:
     - standalone
 
 - name: ansible-nameserver | install
-  include_tasks: install_platform.yml
+  ansible.builtin.include_tasks: install_platform.yml
   when: >
     (
     bind_masters_group in group_names
@@ -21,10 +20,10 @@
     )
 
 - name: ansible-nameserver | host entries
-  include_tasks: host_entries.yml
+  ansible.builtin.include_tasks: host_entries.yml
 
 - name: ansible-nameserver | bind server configuration
-  include_tasks: config_bind.yml
+  ansible.builtin.include_tasks: config_bind.yml
   when: >
     (
     (
@@ -37,7 +36,7 @@
     bind_config
 
 - name: ansible-nameserver | bind server zone configuration
-  include_tasks: manage_zones.yml
+  ansible.builtin.include_tasks: manage_zones.yml
   when: >
     (
     bind_masters_group in group_names
@@ -49,7 +48,7 @@
     bind_manage_zones
 
 - name: ansible-nameserver | install
-  include_tasks: install.yml
+  ansible.builtin.include_tasks: install.yml
   when: >
     (
     bind_masters_group in group_names
@@ -59,7 +58,7 @@
     )
 
 - name: ansible-nameserver | dns client configuration
-  include_tasks: dns_client.yml
+  ansible.builtin.include_tasks: dns_client.yml
   when: bind_clients in group_names
 
 - name: ansible-nameserver | freeipa dependences
@@ -70,9 +69,9 @@
    - not skip_ipa is defined or not skip_ipa
   tags:
     - standalone
-    -
+
 - name: ansible-nameserver | ensure dns for IPA clients
-  include_tasks: ipa_dns_client.yml
+  ansible.builtin.include_tasks: ipa_dns_client.yml
   when:
    - idm_client_group in group_names
    - not skip_ipa is defined or not skip_ipa
