@@ -40,7 +40,7 @@ install:
 jobs:
   include:
     - env: TEST_SCENARIO=kvm
-    - env: TEST_SCENARIO=ipaclient
+    # - env: TEST_SCENARIO=ipaclient
 script: travis_wait 50 molecule test --scenario-name $TEST_SCENARIO
 branches:
   only:
