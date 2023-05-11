@@ -1,10 +1,11 @@
 ---
-- name: ansible-nameserver | deps | set hostname
+- name: Requirements | set hostname
   ansible.builtin.include_role:
-    name: tcharl.ansible_hostname
+    name: tcharl.freeipa_server
   vars:
-    hostname: "{{ nameserver_computed_host.msg }}"
-    hostname_reboot: false
-    ansible_become: true
+    standalone_role: True
+    company_domain: "{{ company_domain }}" # That server's hostname will be should ipa."{{ company_domain }}"
+    company_realm_password: "{{ company_realm_password }}"
+    company_ad_password: "{{ company_ad_password }}"
   tags:
     - dependency

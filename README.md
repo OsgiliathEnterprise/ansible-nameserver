@@ -6,14 +6,12 @@ Nameserver
 * Tests: [![Build Status](https://travis-ci.com/OsgiliathEnterprise/ansible-nameserver.svg?branch=master)](https://travis-ci.com/OsgiliathEnterprise/ansible-nameserver)
 * Chat: [![Join the chat at https://gitter.im/OsgiliathEnterprise/platform](https://badges.gitter.im/OsgiliathEnterprise/platform.svg)](https://gitter.im/OsgiliathEnterprise/platform?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This role configures the hostname of the machine and add the entry in /etc/hosts.
-It is also able to setup a dns/reverse dns on a docker container, being the docker equivalent of [mrlesmithjr/bind](https://github.com/mrlesmithjr/ansible-bind) role
-
+Registers dns entries for client machine in freeipa
 Requirements
 ------------
 
 Unix machine :-)
-* [ansible-containerization](https://galaxy.ansible.com/tcharl/ansible_containerization)
+* [ansible-containerization](https://galaxy.ansible.com/tcharl/freeipa)
 => Can be installed using `molecule dependency`or  
 
 Role Variables

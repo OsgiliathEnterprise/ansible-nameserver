@@ -1,5 +1,5 @@
 ---
-- name: ansible-nameserver | freeipa-deps | import securehost
+- name: Freeipa-deps | import securehost
   ansible.builtin.import_role:
     name: tcharl.ansible_securehost
   when: |

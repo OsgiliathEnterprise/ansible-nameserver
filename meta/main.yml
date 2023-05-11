@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: ansible_nameserver
   author: OsgiliathEnterprise
-  description: this role configures machine local Hostname and DNS on top of [Larry Smith Jr.](https://github.com/mrlesmithjr/ansible-bind) work
+  description: this role configures dns over freeipa
   company: Osgiliath
   namespace: tcharl
 

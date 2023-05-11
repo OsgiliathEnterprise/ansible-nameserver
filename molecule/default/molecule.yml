@@ -10,27 +10,32 @@ driver:
   name: vagrant
   provider:
     name: virtualbox
-lint: |
-  set -e
-  yamllint .
-  flake8
-  ANSIBLE_ROLES_PATH=${MOLECULE_PROJECT_DIRECTORY}/..:${MOLECULE_PROJECT_DIRECTORY}/../community:${ANSIBLE_ROLES_PATH} ANSIBLE_COLLECTIONS_PATH=${MOLECULE_PROJECT_DIRECTORY}/../community-collections:${ANSIBLE_COLLECTIONS_PATH} ansible-lint
 platforms:
-  - name: dns.osgiliath.test
+  - name: idm.osgiliath.test
     box: fedora/35-cloud-base
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        ip: "192.168.50.4"
+        virtualbox__intnet: true
     provider_options:
       cpus: 2
-      memory: 4096
-    provider_raw_config_args:
-      - "customize ['storagectl', :id, '--name', 'IDE', '--hostiocache', 'on']"
+      memory: 3096
     groups:
-      - bindmasters
-      - bindclients
+      - ipaservers
+  - name: client.osgiliath.test
+    box: fedora/35-cloud-base
+    cpus: 2
+    memory: 3096
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        ip: "192.168.50.5"
+        virtualbox__intnet: true
+    groups:
+      - ipaclients
 provisioner:
   name: ansible
-  env:
-    ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/..:${MOLECULE_PROJECT_DIRECTORY}/../community:${ANSIBLE_ROLES_PATH}"
-    ANSIBLE_COLLECTIONS_PATH: "${MOLECULE_PROJECT_DIRECTORY}/../community-collections:${ANSIBLE_COLLECTIONS_PATH}"
 verifier:
   name: testinfra
   env:
@@ -38,7 +43,6 @@ verifier:
   options:
     v: 1
 scenario:
-  name: default
   test_sequence:
     - dependency
     - lint
@@ -48,7 +52,7 @@ scenario:
     - create
     - prepare
     - converge
- #   - idempotence
+    # - idempotence
     - side_effect
     - verify
     - cleanup

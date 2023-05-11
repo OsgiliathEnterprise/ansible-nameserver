@@ -1,10 +1,10 @@
 ---
 
-- name: ansible-nameserver | ipa_dns_client | debug dns zone creation
+- name: Ipa_dns_client | debug dns zone creation
   ansible.builtin.debug:
     msg: "echo '{{ current_host_ip.msg | ansible.utils.ipsubnet(8) }}'"
 
-- name: ansible-nameserver | ipa_dns_client | ensure reverse zone is created
+- name: Ipa_dns_client | ensure reverse zone is created
   freeipa.ansible_freeipa.ipadnszone:
     ipaadmin_password: "{{ company_realm_password }}"
     name_from_ip: " {{ current_host_ip.msg | ansible.utils.ipsubnet(8) }}"
@@ -15,11 +15,11 @@
   changed_when: False
   register: ptr_zone
 
-- name: ansible-nameserver | ipa_dns_client | Display ptr zone name.
+- name: Ipa_dns_client | Display ptr zone name.
   ansible.builtin.debug:
     msg: "PTR Zone: {{ ptr_zone }}"
 
-- name: ansible-nameserver | ipa_dns_client | allow ptr sync on dns zone
+- name: Ipa_dns_client | allow ptr sync on dns zone
   freeipa.ansible_freeipa.ipadnszone:
     ipaadmin_password: "{{ company_realm_password }}"
     name: "{{ company_domain }}"
@@ -39,7 +39,7 @@
 #  delegate_to: "{{ groups[idm_group][0] }}"
 #  no_log: "{{ secure_logs }}"
 
-- name: ansible-nameserver | ipa_dns_client | ensure dns entry is created
+- name: Ipa_dns_client | ensure dns entry is created
   freeipa.ansible_freeipa.ipadnsrecord:
     ipaadmin_password: "{{ company_realm_password }}"
     zone_name: "{{ company_domain }}"
@@ -50,25 +50,25 @@
   no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}"
 
-- name: ansible-nameserver | ipa_dns_client | create resolved.conf.d directory
+- name: Ipa_dns_client | create resolved.conf.d directory
   become: true
   ansible.builtin.file:
     state: directory
     dest: '/etc/systemd/resolved.conf.d'
     mode: "0755"
 
-- name: ansible-nameserver | ipa_dns_client | retrieve masters ip
+- name: Ipa_dns_client | retrieve masters ip
   ansible.builtin.setup:
   register: ipadnsmasterssetup
   delegate_facts: true
   delegate_to: "{{ groups[idm_group][0] }}"
 
-- name: ansible-nameserver | ipa_dns_client | compute master ip if preferred_nic is not set
+- name: Ipa_dns_client | compute master ip if preferred_nic is not set
   ansible.builtin.debug:
     msg: "{{ ipadnsmasterssetup.ansible_facts['ansible_' + dns_preferred_nic].ipv4.address if dns_preferred_nic is defined else ipadnsmasterssetup.ansible_facts.ansible_default_ipv4.address | default(ipadnsmasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
   register: idm_ipa_dns_master_ip
 
-- name: ansible-nameserver | ipa_dns_client | add internal domain dns
+- name: Ipa_dns_client | add internal domain dns
   ansible.builtin.template:
     src: systemd-resolved.conf.d/head.j2
     dest: /etc/systemd/resolved.conf.d/head.conf

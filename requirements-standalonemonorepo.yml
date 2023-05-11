@@ -1,0 +1,9 @@
+---
+roles:
+  # Install a role from Ansible Galaxy.
+  - name: robertdebock.reboot
+  - name: robertdebock.bootstrap
+  - name: robertdebock.core_dependencies
+  - name: geerlingguy.ntp
+  - name: robertdebock.fail2ban
+  - name: robertdebock.epel
