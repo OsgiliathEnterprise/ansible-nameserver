@@ -1,0 +1,62 @@
+---
+dependency:
+  name: galaxy
+  enabled: ${DEPENDENCY_ENABLED:-True}
+  options:
+    role-file: ${REQUIREMENTS_PATH:-requirements-standalone.yml}
+    roles-path: ${MOLECULE_PROJECT_DIRECTORY}/../community
+    requirements-file: requirements-collections.yml
+    collections-path: ${MOLECULE_PROJECT_DIRECTORY}/../community-collections
+driver:
+  name: vagrant
+  provider:
+    name: parallels
+platforms:
+  - name: idm.osgiliath.test
+    box: tcharl/fedora-36-aarch64
+    provider_options:
+      cpus: 2
+      memory: 3096
+    interfaces:
+      - type: dhcp
+        # ip: "192.168.56.4"
+        auto_config: true
+        network_name: private_network
+        # virtualbox__intnet: "internalnetwork"
+    groups:
+      - ipaservers
+  - name: client.osgiliath.test
+    box: tcharl/fedora-36-aarch64
+    cpus: 2
+    memory: 3096
+    interfaces:
+      - type: dhcp
+        # ip: "192.168.56.5"
+        auto_config: true
+        network_name: private_network
+        # virtualbox__intnet: "internalnetwork"
+    groups:
+      - ipaclients
+provisioner:
+  name: ansible
+verifier:
+  name: testinfra
+  env:
+    PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"
+  options:
+    v: 1
+scenario:
+  name: parallels
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+#    - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy

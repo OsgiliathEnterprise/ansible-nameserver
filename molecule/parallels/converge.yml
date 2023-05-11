@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    standalone_role: False
+    preferred_nic: "eth1"
+    company_domain: osgiliath.test
+    secure_logs: False
+  roles:
+    - role: tcharl.ansible_nameserver
