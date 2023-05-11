@@ -1,11 +1,14 @@
 ---
-- name: Requirements | set hostname
-  ansible.builtin.include_role:
+- name: Requirements | Install freeipa_server
+  ansible.builtin.import_role:
     name: tcharl.freeipa_server
-  vars:
-    standalone_role: True
-    company_domain: "{{ company_domain }}" # That server's hostname will be should ipa."{{ company_domain }}"
-    company_realm_password: "{{ company_realm_password }}"
-    company_ad_password: "{{ company_ad_password }}"
+  when: idm_group | default("") | string in group_names
+  tags:
+    - dependency
+
+- name: Requirements | import securehost
+  ansible.builtin.import_role:
+    name: tcharl.ansible_securehost
+  when: idm_client_group | default("") | string in group_names
   tags:
     - dependency

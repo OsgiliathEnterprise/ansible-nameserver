@@ -44,7 +44,6 @@ galaxy_info:
 
   galaxy_tags:
     - "hostname"
-    - "bind"
     - "dns"
     - "freeipa"
     # List tags for your role here, one per line. A tag is a keyword that describes

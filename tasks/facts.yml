@@ -1,0 +1,39 @@
+---
+
+- name: Facts | get current hostname
+  ansible.builtin.command: "hostname"
+  register: nameserver_machine_hostname
+  changed_when: false
+
+- name: Facts | compute client hostname
+  ansible.builtin.debug:
+    msg: "{{ hostname | default(nameserver_machine_hostname.stdout) }}"
+  register: nameserver_computed_host
+
+- name: Facts | retrieve client machine ip
+  ansible.builtin.setup:
+  register: current_host_facts
+  delegate_facts: true
+
+- name: Facts | compute client ip if preferred_nic is not set
+  ansible.builtin.debug:
+    msg: "{{ current_host_facts.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else current_host_facts.ansible_facts.ansible_default_ipv4.address | default(current_host_facts.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
+  register: current_host_ip
+
+- name: Facts | debug dns zone creation
+  ansible.builtin.debug:
+    msg: "echo '{{ current_host_ip.msg | ansible.utils.ipsubnet(8) }}'"
+    verbosity: 2
+
+- name: Facts | retrieve masters ip
+  ansible.builtin.setup:
+  register: ipadnsmasterssetup
+  delegate_facts: true
+  delegate_to: "{{ groups[idm_group][0] }}"
+
+- name: Facts | compute master ip if preferred_nic is not set
+  ansible.builtin.debug:
+    msg: "{{ ipadnsmasterssetup.ansible_facts['ansible_' + dns_preferred_nic].ipv4.address if dns_preferred_nic is defined else ipadnsmasterssetup.ansible_facts.ansible_default_ipv4.address | default(ipadnsmasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
+  register: idm_ipa_dns_master_ip
+
+
