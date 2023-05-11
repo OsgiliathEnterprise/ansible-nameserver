@@ -1,25 +1,20 @@
 ---
 
 - name: Prerequisites
-  ansible.builtin.include_tasks: prereq.yml
+  ansible.builtin.import_tasks: prereq.yml
 
 - name: Requirements
   ansible.builtin.include_tasks: requirements.yml
-  when: standalone_role
+  when:
+    - standalone_role is defined
+    - standalone_role
   tags:
     - standalone
 
-- name: Freeipa dependences
-  ansible.builtin.include_tasks: freeipa-deps.yml
-  when:
-   - standalone_role is defined
-   - standalone_role
-   - not skip_ipa is defined or not skip_ipa
-  tags:
-    - standalone
+- name: Facts
+  ansible.builtin.include_tasks: facts.yml
 
 - name: Ensure dns for IPA clients
   ansible.builtin.include_tasks: ipa_dns_client.yml
   when:
    - idm_client_group in group_names
-   - not skip_ipa is defined or not skip_ipa
