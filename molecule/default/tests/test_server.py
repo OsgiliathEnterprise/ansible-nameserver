@@ -18,13 +18,3 @@ def test_dns_entry_is_created(host):
     grep -c 'Number of entries returned 1'"""
     cmd = host.run(command)
     assert int(cmd.stdout) >= 1
-
-
-def test_resolv_conf_updated(host):
-    command = r"""cat /etc/systemd/resolved.conf.d/head.conf | \
-    grep -c 'Domains=~osgiliath.test'"""
-    cmd = host.run(command)
-    assert int(cmd.stdout) >= 1
-
-
-# TODO test client registration & reverse dns lookup

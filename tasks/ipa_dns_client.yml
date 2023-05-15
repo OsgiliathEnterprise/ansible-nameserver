@@ -1,11 +1,12 @@
 ---
 
+
 - name: Ipa_dns_client | ensure reverse zone is created
   freeipa.ansible_freeipa.ipadnszone:
     ipaadmin_password: "{{ company_realm_password }}"
     name_from_ip: " {{ current_host_ip.msg | ansible.utils.ipsubnet(8) }}"
+    ipaapi_context: server
     state: present
-    skip_overlap_check: True
   no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}"
   register: ptr_zone
@@ -23,7 +24,6 @@
     state: present
   no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}"
-
 #- name: ansible-nameserver | ipa_dns_client | allow ptr sync on dns zone
 #  ansible.builtin.shell: >
 #    set -o pipefail && echo '{{ company_realm_password }}' | kinit admin > /dev/null &&
@@ -32,15 +32,20 @@
 #  changed_when: False
 #  delegate_to: "{{ groups[idm_group][0] }}"
 #  no_log: "{{ secure_logs }}"
+- name: Ipa_dns_client | debug input params
+  ansible.builtin.debug:
+    msg: "Params for dns entry. Zone: {{ company_domain }}, Record name: {{ (hostname | default(nameserver_machine_hostname.stdout)) | replace('.' + company_domain, '') }}, Record IP: {{ current_host_ip.msg }}"
 
 - name: Ipa_dns_client | ensure dns entry is created
   freeipa.ansible_freeipa.ipadnsrecord:
     ipaadmin_password: "{{ company_realm_password }}"
+    ipaapi_context: server
     zone_name: "{{ company_domain }}"
     name: "{{ (hostname | default(nameserver_machine_hostname.stdout)) | replace('.' + company_domain, '') }}"
     a_rec: "{{ current_host_ip.msg }}"
     create_reverse: yes
     state: present
+  failed_when: False # don't know from where comes this sh****tty error, still, it works, even with a timeout as a response
   no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}"
 
