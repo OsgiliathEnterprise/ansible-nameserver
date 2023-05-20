@@ -35,5 +35,3 @@
   ansible.builtin.debug:
     msg: "{{ ipadnsmasterssetup.ansible_facts['ansible_' + dns_preferred_nic].ipv4.address if dns_preferred_nic is defined else ipadnsmasterssetup.ansible_facts.ansible_default_ipv4.address | default(ipadnsmasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
   register: idm_ipa_dns_master_ip
-
-

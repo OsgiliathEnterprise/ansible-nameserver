@@ -3,8 +3,9 @@
   hosts: all
   vars:
     standalone_role: False
-    preferred_nic: "eth1"
     company_domain: osgiliath.test
     secure_logs: False
+    company_realm_password: '123ADMin'
+    company_ad_password: '123ADmPass'
   roles:
     - role: tcharl.ansible_nameserver
