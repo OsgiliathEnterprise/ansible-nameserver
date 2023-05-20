@@ -6,6 +6,7 @@
         name: tcharl.ansible_nameserver
         tasks_from: requirements.yml
       vars:
+        allow_dns_zone_overlap: True
         preferred_nic: "eth1"
         standalone_role: False
         company_domain: "osgiliath.test" # That server's hostname will be should ipa."{{ company_domain }}"
