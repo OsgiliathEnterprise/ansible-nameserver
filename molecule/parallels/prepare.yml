@@ -1,6 +1,19 @@
 ---
-- name: prepare IPA
-  hosts: all
+- name: Prepare server
+  hosts: idm.osgiliath.test
+  tasks:
+    - include_role:
+        name: tcharl.ansible_nameserver
+        tasks_from: requirements.yml
+      vars:
+        preferred_nic: "eth1"
+        standalone_role: False
+        company_domain: "osgiliath.test" # That server's hostname will be should ipa."{{ company_domain }}"
+        company_realm_password: '123ADMin'
+        company_ad_password: '123ADmPass'
+
+- name: Prepare client
+  hosts: client.osgiliath.test
   tasks:
     - include_role:
         name: tcharl.ansible_nameserver
