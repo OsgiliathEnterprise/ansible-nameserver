@@ -13,7 +13,7 @@ driver:
     name: parallels
 platforms:
   - name: idm.osgiliath.test
-    box: tcharl/fedora-36-aarch64
+    box: ${TESTBOX:-bento/fedora-38-arm64}
     provider_options:
       cpus: 2
       memory: 3096
@@ -26,7 +26,7 @@ platforms:
     groups:
       - ipaservers
   - name: client.osgiliath.test
-    box: tcharl/fedora-36-aarch64
+    box: ${TESTBOX:-bento/fedora-38-arm64}
     cpus: 2
     memory: 3096
     interfaces:

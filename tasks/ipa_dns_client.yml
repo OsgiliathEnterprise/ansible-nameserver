@@ -22,6 +22,7 @@
     ipaadmin_password: "{{ company_realm_password }}"
     name: "{{ company_domain }}"
     allow_sync_ptr: true
+    ipaapi_context: server
     state: present
   no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}"

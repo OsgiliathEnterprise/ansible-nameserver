@@ -1,14 +1,6 @@
 ---
-- name: Requirements | Install freeipa_server
-  ansible.builtin.import_role:
-    name: tcharl.freeipa_server
-  when: idm_group | default("") | string in group_names
-  tags:
-    - dependency
-
 - name: Requirements | import securehost
   ansible.builtin.import_role:
     name: tcharl.ansible_securehost
-  when: idm_client_group | default("") | string in group_names
   tags:
     - dependency

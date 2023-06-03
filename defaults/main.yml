@@ -1,8 +1,6 @@
 ---
 
 standalone_role: True
-idm_client_group: "ipaclients" # By convention, don't touch!
-idm_group: "ipaservers" # By convention, don't touch!
 company_domain: "osgiliath.test"
 company_realm_password: "123ADMin"
 bind_pri_domain_name: "{{ company_domain }}"

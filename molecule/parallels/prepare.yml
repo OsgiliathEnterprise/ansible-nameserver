@@ -11,7 +11,6 @@
         company_domain: "osgiliath.test" # That server's hostname will be should ipa."{{ company_domain }}"
         company_realm_password: '123ADMin'
         company_ad_password: '123ADmPass'
-        allow_dns_zone_overlap: True
 
 - name: Prepare client
   hosts: client.osgiliath.test

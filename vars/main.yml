@@ -1,2 +1,4 @@
 ---
 # vars file for ansible-nameserver
+idm_client_group: "ipaclients" # By convention, don't touch!
+idm_group: "ipaservers" # By convention, don't touch!
