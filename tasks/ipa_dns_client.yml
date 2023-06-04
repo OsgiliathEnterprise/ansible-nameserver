@@ -4,7 +4,7 @@
 - name: Ipa_dns_client | ensure reverse zone is created
   freeipa.ansible_freeipa.ipadnszone:
     ipaadmin_password: "{{ company_realm_password }}"
-    name_from_ip: " {{ current_host_ip.msg | ansible.utils.ipsubnet(8) }}"
+    name_from_ip: "{{ current_host_ip.msg | ansible.utils.ipsubnet(8) }}"
     ipaapi_context: server
     state: present
   failed_when: False # TODO too lazy to find a good regex that
@@ -14,8 +14,7 @@
 
 - name: Ipa_dns_client | Display ptr zone name.
   ansible.builtin.debug:
-    msg: "PTR Zone: {{ ptr_zone }}"
-    verbosity: 2
+    msg: "PTR Zone: {{ current_host_ip.msg | ansible.utils.ipsubnet(8) | replace('.0.0.0/8', '') }}.in-addr.arpa"
 
 - name: Ipa_dns_client | allow ptr sync on dns zone
   freeipa.ansible_freeipa.ipadnszone:
@@ -26,18 +25,13 @@
     state: present
   no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}"
-#- name: ansible-nameserver | ipa_dns_client | allow ptr sync on dns zone
-#  ansible.builtin.shell: >
-#    set -o pipefail && echo '{{ company_realm_password }}' | kinit admin > /dev/null &&
-#    ipa dnszone-mod --allow-sync-ptr=1 {{ company_domain }}
-#  failed_when: False
-#  changed_when: False
-#  delegate_to: "{{ groups[idm_group][0] }}"
-#  no_log: "{{ secure_logs }}"
+
 - name: Ipa_dns_client | debug input params
   ansible.builtin.debug:
-    msg: "Params for dns entry. Zone: {{ company_domain }}, Record name: {{ (hostname | default(nameserver_machine_hostname.stdout)) | replace('.' + company_domain, '') }}, Record IP: {{ current_host_ip.msg }}"
-    verbosity: 2
+    msg: "Params for dns entry. Zone: {{ company_domain }}, Record name: {{ (hostname | default(nameserver_machine_hostname.stdout)) | replace('.' + company_domain, '') }}, Record IP: {{ current_host_ip.msg }}, PTR: {{ current_host_ip.msg | ansible.utils.ipaddr('revdns') | replace('.in-addr.arpa.', '') | ansible.utils.ipsubnet(24) | replace('.0/24', '') }}"
+
+- name: Ipa_dns_client | remove potentially outdated ptr entries
+  ansible.builtin.include_tasks: delete-outdated-ptr.yml
 
 - name: Ipa_dns_client | ensure dns entry is created
   freeipa.ansible_freeipa.ipadnsrecord:
@@ -49,6 +43,19 @@
     create_reverse: yes
     state: present
   failed_when: False # don't know from where comes this sh****tty error, still, it works, even with a timeout as a response
+  no_log: "{{ secure_logs }}"
+  delegate_to: "{{ groups[idm_group][0] }}"
+
+- name: Ipa_dns_client | ensure reverse dns entry is created
+  freeipa.ansible_freeipa.ipadnsrecord:
+    ipaadmin_password: "{{ company_realm_password }}"
+    ipaapi_context: server
+    zone_name: "{{ current_host_ip.msg | ansible.utils.ipsubnet(8) | replace('.0.0.0/8', '') }}.in-addr.arpa"
+    record_type: PTR
+    ptr_hostname: "{{ (hostname | default(nameserver_machine_hostname.stdout)) | replace('.' + company_domain, '') }}"
+    name: "{{ current_host_ip.msg | ansible.utils.ipaddr('revdns') | replace('.in-addr.arpa.', '') | ansible.utils.ipsubnet(24) | replace('.0/24', '') }}"
+    state: present
+  failed_when: False # May have been created above
   no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}"
 

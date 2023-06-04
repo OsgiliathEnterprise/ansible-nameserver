@@ -1,25 +1,14 @@
 ---
-- name: Prepare server
-  hosts: idm.osgiliath.test
+- name: Prepare
+  hosts: all
   tasks:
     - include_role:
         name: tcharl.ansible_nameserver
         tasks_from: requirements.yml
       vars:
         allow_dns_zone_overlap: True
-        standalone_role: False
-        company_domain: "osgiliath.test" # That server's hostname will be should ipa."{{ company_domain }}"
-        company_realm_password: '123ADMin'
-        company_ad_password: '123ADmPass'
-
-- name: Prepare client
-  hosts: client.osgiliath.test
-  tasks:
-    - include_role:
-        name: tcharl.ansible_nameserver
-        tasks_from: requirements.yml
-      vars:
-        standalone_role: False
+        preferred_nic: "eth1"
+        standalone_role: true
         company_domain: "osgiliath.test" # That server's hostname will be should ipa."{{ company_domain }}"
         company_realm_password: '123ADMin'
         company_ad_password: '123ADmPass'

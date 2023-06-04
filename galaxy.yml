@@ -1,0 +1,20 @@
+---
+namespace: "tcharl"
+name: "ansible_nameserver"
+version: "2.0.1"
+description: "this role configures dns over freeipa"
+
+authors:
+  - "Charlie Mordant <cmordant1@gmail.com>"
+
+repository: "https://github.com/OsgiliathEnterprise/ansible-nameserver"
+documentation: "https://github.com/OsgiliathEnterprise/ansible-nameserver/blob/master/README.md"
+homepage: "https://github.com/OsgiliathEnterprise/ansible-nameserver"
+issues: "https://github.com/OsgiliathEnterprise/ansible-nameserver/issues"
+
+readme: "README.md"
+license:
+  - "Apache-2.0"
+tags:
+  - "freeipa"
+  - "dns"

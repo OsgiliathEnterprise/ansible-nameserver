@@ -12,8 +12,9 @@
 
 - name: Facts | retrieve client machine ip
   ansible.builtin.setup:
+    gather_subset:
+      - network
   register: current_host_facts
-  delegate_facts: true
 
 - name: Facts | compute client ip if preferred_nic is not set
   ansible.builtin.debug:
@@ -27,6 +28,8 @@
 
 - name: Facts | retrieve masters ip
   ansible.builtin.setup:
+    gather_subset:
+      - network
   register: ipadnsmasterssetup
   delegate_facts: true
   delegate_to: "{{ groups[idm_group][0] }}"

@@ -1,0 +1,30 @@
+---
+
+- name: Delete outdated ptr | find current PTR record matching {{ (hostname | default(nameserver_machine_hostname.stdout)) | replace('.' + company_domain, '') }}
+  ansible.builtin.shell: |
+    set -o pipefail && echo '{{ company_realm_password }}' | kinit admin > /dev/null &&
+    ipa dnsrecord-find osgiliath.test client | grep 'A record:' | cut -d ':' -f2 | tr -d '[[:space:]]'
+  register: outdated_record_ip
+  changed_when: False
+  failed_when: False
+  no_log: "{{ secure_logs }}"
+  delegate_to: "{{ groups[idm_group][0] }}"
+
+- name: Delete outdated ptr | debug exiting DNS record IP
+  ansible.builtin.debug:
+    msg: "Exiting DNS record IP: {{ outdated_record_ip.stdout }}"
+
+- name: Delete outdated ptr | delete existing PTR record if ip doesn't match with current
+  freeipa.ansible_freeipa.ipadnsrecord:
+    ipaadmin_password: "{{ company_realm_password }}"
+    ipaapi_context: server
+    zone_name: "{{ current_host_ip.msg | ansible.utils.ipsubnet(8) | replace('.0.0.0/8', '') }}.in-addr.arpa"
+    record_type: PTR
+    ptr_hostname: "{{ (hostname | default(nameserver_machine_hostname.stdout)) | replace('.' + company_domain, '') }}"
+    name: "{{ outdated_record_ip.msg | ansible.utils.ipaddr('revdns') | replace('.in-addr.arpa.', '') | ansible.utils.ipsubnet(24) | replace('.0/24', '') }}"
+    state: absent
+  when:
+   - outdated_record_ip.rc != 1
+   - current_host_ip.msg != outdated_record_ip.stdout
+  no_log: "{{ secure_logs }}"
+  delegate_to: "{{ groups[idm_group][0] }}"
