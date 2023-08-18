@@ -14,27 +14,27 @@
   ansible.builtin.setup:
     gather_subset:
       - network
-  register: current_host_facts
+  register: nameserver_current_host_facts
 
 - name: Facts | compute client ip if preferred_nic is not set
   ansible.builtin.debug:
-    msg: "{{ current_host_facts.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else current_host_facts.ansible_facts.ansible_default_ipv4.address | default(current_host_facts.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
-  register: current_host_ip
+    msg: "{{ nameserver_current_host_facts.ansible_facts['ansible_' + preferred_nic | replace('-', '_')].ipv4.address if preferred_nic is defined else nameserver_current_host_facts.ansible_facts.ansible_default_ipv4.address | default(nameserver_current_host_facts.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
+  register: nameserver_current_host_ip
 
 - name: Facts | debug dns zone creation
   ansible.builtin.debug:
-    msg: "echo '{{ current_host_ip.msg | ansible.utils.ipsubnet(8) }}'"
+    msg: "echo '{{ nameserver_current_host_ip.msg | ansible.utils.ipsubnet(8) }}'"
     verbosity: 2
 
 - name: Facts | retrieve masters ip
   ansible.builtin.setup:
     gather_subset:
       - network
-  register: ipadnsmasterssetup
+  register: nameserver_ipadnsmasterssetup
   delegate_facts: true
   delegate_to: "{{ groups[idm_group][0] }}"
 
 - name: Facts | compute master ip if preferred_nic is not set
   ansible.builtin.debug:
-    msg: "{{ ipadnsmasterssetup.ansible_facts['ansible_' + dns_preferred_nic].ipv4.address if dns_preferred_nic is defined else ipadnsmasterssetup.ansible_facts.ansible_default_ipv4.address | default(ipadnsmasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
-  register: idm_ipa_dns_master_ip
+    msg: "{{ nameserver_ipadnsmasterssetup.ansible_facts['ansible_' + idm_preferred_nic | replace('-', '_')].ipv4.address if idm_preferred_nic is defined else nameserver_ipadnsmasterssetup.ansible_facts.ansible_default_ipv4.address | default(nameserver_ipadnsmasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
+  register: nameserver_idm_ip

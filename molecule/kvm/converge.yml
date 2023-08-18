@@ -1,6 +1,6 @@
 ---
 - name: Converge
-  hosts: all
+  hosts: client.osgiliath.test
   vars:
     standalone_role: False
     preferred_nic: "eth1"

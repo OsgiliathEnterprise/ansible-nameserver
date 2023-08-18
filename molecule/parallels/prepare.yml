@@ -8,6 +8,7 @@
       vars:
         preferred_nic: "eth1"
         standalone_role: true
+        firewalld_zone: "public"
         company_domain: "osgiliath.test" # That server's hostname will be should ipa."{{ company_domain }}"
         company_realm_password: '123ADMin'
         company_ad_password: '123ADmPass'

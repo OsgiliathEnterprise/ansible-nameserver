@@ -1,6 +1,9 @@
 ---
 - name: Prereq | install netaddr
   ansible.builtin.package:
-    name: python-netaddr
+    name: "{{ item }}"
     state: present
+  with_items:
+    - python-netaddr
+#    - systemd-resolved
   become: True
