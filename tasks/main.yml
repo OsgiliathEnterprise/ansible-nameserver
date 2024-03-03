@@ -14,6 +14,11 @@
 - name: Facts
   ansible.builtin.include_tasks: facts.yml
 
+- name: Ensure configure IPA server
+  ansible.builtin.include_tasks: ipa_server.yml
+  when:
+   - idm_group in group_names
+
 - name: Ensure dns for IPA clients
   ansible.builtin.include_tasks: ipa_dns_client.yml
   when:

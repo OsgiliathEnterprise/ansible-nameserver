@@ -1,0 +1,26 @@
+---
+
+# Assuming all client machines are in the same domain and same /8 subnet , we can use the company_domain variable to set the dns zone.
+- name: Ipa_dns_client | ensure reverse zone is created
+  freeipa.ansible_freeipa.ipadnszone:
+    ipaadmin_password: "{{ company_realm_password }}"
+    name_from_ip: "{{ nameserver_current_host_ip.msg | ansible.utils.ipsubnet(8) }}"
+    ipaapi_context: server
+    state: present
+  failed_when: False # TODO too lazy to find a good regex that
+  no_log: "{{ secure_logs }}"
+  register: ptr_zone
+
+- name: Ipa_dns_client | Display ptr zone name.
+  ansible.builtin.debug:
+    msg: "PTR Zone: {{ nameserver_current_host_ip.msg | ansible.utils.ipsubnet(8) | replace('.0.0.0/8', '') }}.in-addr.arpa"
+
+- name: Ipa_dns_client | allow ptr sync on dns zone
+  freeipa.ansible_freeipa.ipadnszone:
+    ipaadmin_password: "{{ company_realm_password }}"
+    name: "{{ company_domain }}"
+    allow_sync_ptr: true
+    ipaapi_context: server
+    state: present
+  no_log: "{{ secure_logs }}"
+
