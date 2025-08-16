@@ -1,12 +1,11 @@
 ---
 - name: Converge
-  hosts: client.osgiliath.test
+  hosts: all
   vars:
     standalone_role: False
+    secure_logs: False
     preferred_nic: "eth1"
     company_domain: osgiliath.test
-    secure_logs: False
-    company_realm_password: '123ADMin'
-    company_ad_password: '123ADmPass'
+    idm_preferred_nic: "eth1"
   roles:
     - role: tcharl.ansible_nameserver

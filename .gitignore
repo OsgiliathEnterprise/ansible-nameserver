@@ -1,4 +1,6 @@
 .idea
 .cache
+.ansible
 **/*__pycache__
 .tox
+.poetry

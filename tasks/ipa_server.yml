@@ -23,4 +23,3 @@
     ipaapi_context: server
     state: present
   no_log: "{{ secure_logs }}"
-

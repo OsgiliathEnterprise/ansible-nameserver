@@ -6,10 +6,10 @@ roles:
   - name: tcharl.fail2ban
   - name: tcharl.ansible_hostname
   - name: tcharl.etchost_append
+  - name: tcharl.ansible_routing
   - name: robertdebock.reboot
   - name: robertdebock.bootstrap
   - name: robertdebock.core_dependencies
   - name: geerlingguy.ntp
-  - name: tcharl.ansible_routing
   - name: robertdebock.fail2ban
   - name: robertdebock.epel
