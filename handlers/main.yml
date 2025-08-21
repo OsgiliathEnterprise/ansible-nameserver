@@ -1,0 +1,10 @@
+---
+# handlers file for ansible-orchestration
+- name: Handler | refresh systemd-resolved
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: systemd-resolved
+  become: true
+  listen: ansible-nameserver | refresh systemd-resolved
+

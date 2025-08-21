@@ -52,3 +52,5 @@
   vars:
     dns_master_ip_to_set: "{{ nameserver_idm_ip.msg }}"
     domain: "{{ company_domain }}"
+  notify:
+    - ansible-nameserver | refresh systemd-resolved
