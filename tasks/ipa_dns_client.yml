@@ -47,10 +47,16 @@
     dest: /etc/systemd/resolved.conf.d/head.conf
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   become: true
   vars:
     dns_master_ip_to_set: "{{ nameserver_idm_ip.msg }}"
     domain: "{{ company_domain }}"
   notify:
     - ansible-nameserver | refresh systemd-resolved
+
+- name: Ipa_dns_client | restart systemd-resolved
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted
+  become: true

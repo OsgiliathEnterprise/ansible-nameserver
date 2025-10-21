@@ -7,4 +7,3 @@
     name: systemd-resolved
   become: true
   listen: ansible-nameserver | refresh systemd-resolved
-
