@@ -1,11 +1,13 @@
 ---
 - name: Converge
-  hosts: all
+  hosts:
+    - idm.osgiliath.test
+    - client.osgiliath.test
   vars:
     standalone_role: False
     secure_logs: False
-    company_domain: osgiliath.test
     preferred_nic: "eth1"
+    company_domain: osgiliath.test
     idm_preferred_nic: "eth1"
     company_realm_password: '123ADMin'
     company_ad_password: '123ADmPass'

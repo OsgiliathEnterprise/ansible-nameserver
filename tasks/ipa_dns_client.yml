@@ -3,7 +3,8 @@
 
 - name: Ipa_dns_client | debug input params
   ansible.builtin.debug:
-    msg: "Params for dns entry. Zone: {{ company_domain }}, Record name: {{ (hostname | default(nameserver_computed_host.msg)) | replace('.' + company_domain, '') }}, Record IP: {{ nameserver_current_host_ip.msg }}, PTR: {{ nameserver_current_host_ip.msg | ansible.utils.ipaddr('revdns') | replace('.in-addr.arpa.', '') | ansible.utils.ipsubnet(24) | replace('.0/24', '') }}"
+    msg: "Params for dns entry. Zone: {{ company_domain }}, Record name: {{ (hostname | default(nameserver_current_host)) | replace('.' + company_domain, '') }}, Record IP: {{ nameserver_current_host_ip }}, PTR: {{ nameserver_current_host_ip | ansible.utils.ipaddr('revdns') | replace('.in-addr.arpa.', '') | ansible.utils.ipsubnet(24) | replace('.0/24', '') }}"
+    verbosity: 1
 
 - name: Ipa_dns_client | remove potentially outdated ptr entries
   ansible.builtin.include_tasks: delete-outdated-ptr.yml
@@ -13,8 +14,8 @@
     ipaadmin_password: "{{ company_realm_password }}"
     ipaapi_context: server
     zone_name: "{{ company_domain }}"
-    name: "{{ nameserver_computed_host.msg | replace('.' + company_domain, '') }}"
-    a_rec: "{{ nameserver_current_host_ip.msg }}"
+    name: "{{ nameserver_current_host | replace('.' + company_domain, '') }}"
+    a_rec: "{{ nameserver_current_host_ip }}"
     create_reverse: yes
     state: present
   failed_when: False # don't know from where comes this sh****tty error, still, it works, even with a timeout as a response
@@ -25,10 +26,10 @@
   freeipa.ansible_freeipa.ipadnsrecord:
     ipaadmin_password: "{{ company_realm_password }}"
     ipaapi_context: server
-    zone_name: "{{ nameserver_current_host_ip.msg | ansible.utils.ipsubnet(8) | replace('.0.0.0/8', '') }}.in-addr.arpa"
+    zone_name: "{{ nameserver_current_host_ip | ansible.utils.ipsubnet(8) | replace('.0.0.0/8', '') }}.in-addr.arpa"
     record_type: PTR
-    ptr_hostname: "{{ nameserver_computed_host.msg | replace('.' + company_domain, '') }}"
-    name: "{{ nameserver_current_host_ip.msg | ansible.utils.ipaddr('revdns') | replace('.in-addr.arpa.', '') | ansible.utils.ipsubnet(24) | replace('.0/24', '') }}"
+    ptr_hostname: "{{ nameserver_current_host | replace('.' + company_domain, '') }}"
+    name: "{{ nameserver_current_host_ip | ansible.utils.ipaddr('revdns') | replace('.in-addr.arpa.', '') | ansible.utils.ipsubnet(24) | replace('.0/24', '') }}"
     state: present
   failed_when: False # May have been created above
   no_log: "{{ secure_logs }}"
@@ -50,7 +51,7 @@
     mode: "0644"
   become: true
   vars:
-    dns_master_ip_to_set: "{{ nameserver_idm_ip.msg }}"
+    dns_master_ip_to_set: "{{ nameserver_idm_ip }}"
     domain: "{{ company_domain }}"
   notify:
     - ansible-nameserver | refresh systemd-resolved

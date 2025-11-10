@@ -1,6 +1,0 @@
----
-- name: Requirements | import securehost
-  ansible.builtin.import_role:
-    name: tcharl.ansible_securehost
-  tags:
-    - dependency

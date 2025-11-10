@@ -12,7 +12,7 @@ Requirements
 ------------
 
 Unix machine :-)
-A freeipa server running somewhere
+A freeipa server running somewhere (using the freeipa_server role for example) and the securehost role to have the host joined to the freeipa domain
 Look at [requirements.txt](./requirements.txt) and [requirements-dev.txt](./requirements-dev.txt)
 
 Role Variables

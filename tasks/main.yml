@@ -3,14 +3,6 @@
 - name: Prerequisites
   ansible.builtin.import_tasks: prereq.yml
 
-- name: Requirements
-  ansible.builtin.include_tasks: requirements.yml
-  when:
-    - standalone_role is defined
-    - standalone_role
-  tags:
-    - standalone
-
 - name: Facts
   ansible.builtin.include_tasks: facts.yml
 
