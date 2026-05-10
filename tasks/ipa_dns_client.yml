@@ -26,10 +26,10 @@
   freeipa.ansible_freeipa.ipadnsrecord:
     ipaadmin_password: "{{ company_realm_password }}"
     ipaapi_context: server
-    zone_name: "{{ nameserver_current_host_ip | ansible.utils.ipsubnet(8) | replace('.0.0.0/8', '') }}.in-addr.arpa"
+    zone_name: "{{ nameserver_current_host_ip | ansible.utils.ipsubnet(24) | ansible.utils.ipaddr('revdns') | regex_replace('^0\\.', '') | regex_replace('\\.$', '') }}"
     record_type: PTR
     ptr_hostname: "{{ nameserver_current_host | replace('.' + company_domain, '') }}"
-    name: "{{ nameserver_current_host_ip | ansible.utils.ipaddr('revdns') | replace('.in-addr.arpa.', '') | ansible.utils.ipsubnet(24) | replace('.0/24', '') }}"
+    name: "{{ nameserver_current_host_ip.split('.')[-1] }}"
     state: present
   failed_when: False # May have been created above
   no_log: "{{ secure_logs }}"

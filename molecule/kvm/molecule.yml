@@ -11,7 +11,7 @@ driver:
     name: libvirt
 platforms:
   - name: idm.osgiliath.test
-    box: ${TESTBOX:-bento/fedora-42}
+    box: ${TESTBOX:-generic/fedora39}
     provider_options:
       driver: "kvm"
       cpus: 2
@@ -23,7 +23,7 @@ platforms:
     groups:
       - ipaservers
   - name: client.osgiliath.test
-    box: ${TESTBOX:-bento/fedora-42}
+    box: ${TESTBOX:-generic/fedora39}
     provider_options:
       driver: "kvm"
       cpus: 2
@@ -36,12 +36,15 @@ platforms:
       - ipaclients
 provisioner:
   name: ansible
-#  config_options:
-#    defaults:
-#      forks: 20
-#   ssh_connection:
-#     pipelining: true
-#      ssh_args: -o ControlMaster=auto -o ControlPersist=6000s
+  env:
+    ANSIBLE_COLLECTIONS_PATH: "${MOLECULE_PROJECT_DIRECTORY}/../community-collections:${HOME}/.ansible/collections:/usr/share/ansible/collections"
+    ANSIBLE_REMOTE_TMP: /var/tmp/ansible-remote
+    ANSIBLE_ASYNC_DIR: "/tmp/.ansible_async"
+  options:
+    vvv: True
+  config_options:
+    defaults:
+      remote_tmp: /var/tmp/ansible-remote
 verifier:
   name: testinfra
   env:

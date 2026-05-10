@@ -26,5 +26,7 @@
   when:
    - outdated_record_ip.rc != 1
    - nameserver_current_host_ip != outdated_record_ip.stdout
+   - outdated_record_ip.stdout != ""
+   - outdated_record_ip.stdout is defined
   no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}"

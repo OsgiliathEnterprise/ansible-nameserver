@@ -4,7 +4,7 @@
 - name: Ipa_server | ensure reverse zone is created
   freeipa.ansible_freeipa.ipadnszone:
     ipaadmin_password: "{{ company_realm_password }}"
-    name_from_ip: "{{ nameserver_current_host_ip | ansible.utils.ipsubnet(8) }}"
+    name_from_ip: "{{ nameserver_current_host_ip | ansible.utils.ipsubnet(24) }}"
     ipaapi_context: server
     state: present
   failed_when: False # TODO too lazy to find a good regex that
@@ -13,8 +13,12 @@
 
 - name: Ipa_server | Display ptr zone name.
   ansible.builtin.debug:
-    msg: "PTR Zone: {{ nameserver_current_host_ip | ansible.utils.ipsubnet(8) | replace('.0.0.0/8', '') }}.in-addr.arpa"
+    msg: "PTR Zone: {{ nameserver_current_host_ip | ansible.utils.ipsubnet(24) | replace('.0.0.0/24', '') }}.in-addr.arpa"
     verbosity: 1
+
+- name: Ipa_server | Display ptr zone name.
+  ansible.builtin.debug:
+    msg: "PTR Zone: {{ ptr_zone }}"
 
 - name: Ipa_server | allow ptr sync on dns zone
   freeipa.ansible_freeipa.ipadnszone:

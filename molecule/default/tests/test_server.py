@@ -7,7 +7,8 @@ def test_ipa_zone_is_created(host):
     kinit admin > /dev/null && \
     ipa dnszone-find --pkey-only | \
     egrep -c '[0-9]{1,3}\.in-addr\.arpa\.'"""
-    cmd = host.run(command)
+    with host.sudo():
+        cmd = host.run(command)
     assert int(cmd.stdout) >= 1
 
 
@@ -16,7 +17,8 @@ def test_dns_entry_is_created(host):
     kinit admin > /dev/null && \
     ipa dnsrecord-find osgiliath.test --name="client" | \
     grep -c 'Number of entries returned 1'"""
-    cmd = host.run(command)
+    with host.sudo():
+        cmd = host.run(command)
     assert int(cmd.stdout) >= 1
 
 
@@ -34,5 +36,6 @@ def test_rev_dns_entry_is_created(host):
     tr -d '[[:space:]]'
     ) | \
     grep -c 'PTR record: client'"""
-    cmd = host.run(command)
+    with host.sudo():
+        cmd = host.run(command)
     assert int(cmd.stdout) >= 1
