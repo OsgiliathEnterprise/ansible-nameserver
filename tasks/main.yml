@@ -1,5 +1,8 @@
 ---
 
+- name: Asserts
+  ansible.builtin.import_tasks: assert.yml
+
 - name: Prerequisites
   ansible.builtin.import_tasks: prereq.yml
 
