@@ -34,30 +34,3 @@
   failed_when: False # May have been created above
   no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}"
-
-- name: Ipa_dns_client | create resolved.conf.d directory
-  become: true
-  ansible.builtin.file:
-    state: directory
-    dest: '/etc/systemd/resolved.conf.d'
-    mode: "0755"
-
-- name: Ipa_dns_client | add internal domain dns
-  ansible.builtin.template:
-    src: systemd-resolved.conf.d/head.j2
-    dest: /etc/systemd/resolved.conf.d/head.conf
-    owner: root
-    group: root
-    mode: "0644"
-  become: true
-  vars:
-    dns_master_ip_to_set: "{{ nameserver_idm_ip }}"
-    domain: "{{ company_domain }}"
-  notify:
-    - ansible-nameserver | refresh systemd-resolved
-
-- name: Ipa_dns_client | restart systemd-resolved
-  ansible.builtin.systemd:
-    name: systemd-resolved
-    state: restarted
-  become: true
