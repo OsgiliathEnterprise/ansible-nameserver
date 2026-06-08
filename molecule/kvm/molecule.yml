@@ -11,7 +11,8 @@ driver:
     name: libvirt
 platforms:
   - name: idm.osgiliath.test
-    box: ${TESTBOX:-generic/fedora39}
+    box: ${TESTBOX:-fedora-cloud-44-libvirt}
+    box_url: ${TESTBOX_URL:-https://download.fedoraproject.org/pub/fedora/linux/releases/44/Cloud/x86_64/images/Fedora-Cloud-Base-Vagrant-libvirt-44-1.7.x86_64.vagrant.libvirt.box}
     provider_options:
       driver: "kvm"
       cpus: 2
@@ -23,7 +24,8 @@ platforms:
     groups:
       - ipaservers
   - name: client.osgiliath.test
-    box: ${TESTBOX:-generic/fedora39}
+    box: ${TESTBOX:-fedora-cloud-44-libvirt}
+    box_url: ${TESTBOX_URL:-https://download.fedoraproject.org/pub/fedora/linux/releases/44/Cloud/x86_64/images/Fedora-Cloud-Base-Vagrant-libvirt-44-1.7.x86_64.vagrant.libvirt.box}
     provider_options:
       driver: "kvm"
       cpus: 2
@@ -38,8 +40,7 @@ provisioner:
   name: ansible
   env:
     ANSIBLE_COLLECTIONS_PATH: "${MOLECULE_PROJECT_DIRECTORY}/../community-collections:${HOME}/.ansible/collections:/usr/share/ansible/collections"
-  options:
-    vvv: True
+    ANSIBLE_VERBOSITY: 2
   config_options:
     defaults:
       remote_tmp: /tmp
