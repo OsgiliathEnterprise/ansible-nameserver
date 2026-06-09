@@ -14,8 +14,8 @@
 - name: Assert | test if hostname_reboot is set correctly
   ansible.builtin.assert:
     that:
-      - nameserver_current_host_facts.ansible_facts['ansible_' + preferred_nic | replace('-', '_')] is defined
-      - nameserver_current_host_facts.ansible_facts['ansible_' + preferred_nic | replace('-', '_')].ipv4.address is defined
+      - nameserver_current_host_facts.ansible_facts['ansible_' ~ (preferred_nic | replace('-', '_'))] is defined
+      - nameserver_current_host_facts.ansible_facts['ansible_' ~ (preferred_nic | replace('-', '_'))].ipv4.address is defined
     quiet: yes
   when:
     - preferred_nic is defined

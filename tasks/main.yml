@@ -2,6 +2,8 @@
 
 - name: Asserts
   ansible.builtin.import_tasks: assert.yml
+  when:
+    - not skip_nameserver_assert
 
 - name: Prerequisites
   ansible.builtin.import_tasks: prereq.yml
