@@ -43,7 +43,7 @@ script:
   - cd ../tcharl.ansible_nameserver
   - uv tool run --python 3.13 --from ansible-core ansible-galaxy role install -r requirements-standalone.yml
   - uv tool run --python 3.13 --from ansible-core ansible-galaxy collection install -r requirements-collections.yml
-  - travis_wait 30 uv tool run --python 3.13 --with tox tox -e test-exec -- --scenario-name kvm
+  - travis_wait 40 uv tool run --python 3.13 --with tox tox -e test-exec -- --scenario-name kvm
 branches:
   only:
     - master
