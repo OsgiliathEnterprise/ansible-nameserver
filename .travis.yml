@@ -4,7 +4,7 @@ dist: jammy
 
 language: python
 python:
-  - "3.11"
+  - "3.13"
 addons:
   apt:
     sources:
@@ -35,14 +35,15 @@ addons:
 
 install:
   - vagrant plugin install vagrant-libvirt
-  - pip install wheel pyopenssl tox ansible
+  - pip install uv
   - sudo chmod o+rwx /var/run/libvirt/libvirt-sock
 
 script:
   - mv ../ansible-nameserver ../tcharl.ansible_nameserver
-  - ansible-galaxy role install -r requirements-standalone.yml
-  - ansible-galaxy collection install -r requirements-collections.yml
-  - travis_wait 30 tox -e test-exec -- --scenario-name kvm
+  - cd ../tcharl.ansible_nameserver
+  - uv tool run --python 3.13 --from ansible-core ansible-galaxy role install -r requirements-standalone.yml
+  - uv tool run --python 3.13 --from ansible-core ansible-galaxy collection install -r requirements-collections.yml
+  - travis_wait 30 uv tool run --python 3.13 --with tox tox -e test-exec -- --scenario-name kvm
 branches:
   only:
     - master
