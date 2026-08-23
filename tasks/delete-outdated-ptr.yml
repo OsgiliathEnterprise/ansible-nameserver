@@ -3,10 +3,12 @@
 - name: Delete outdated ptr | find current PTR record matching {{ nameserver_current_host | replace('.' + company_domain, '') }}
   ansible.builtin.shell: |
     set -o pipefail && echo '{{ company_realm_password }}' | kinit admin > /dev/null &&
-    ipa dnsrecord-find {{ company_domain }} client | grep 'A record:' | cut -d ':' -f2 | tr -d '[[:space:]]'
+    ipa dnsrecord-find {{ company_domain }} {{ nameserver_current_host | replace('.' + company_domain, '') }} | grep 'A record:' | cut -d ':' -f2 | tr -d '[[:space:]]'
   register: outdated_record_ip
-  changed_when: False
-  failed_when: False
+  # read-only: the query only reads DNS state (the transient Kerberos ticket is not persistent system state)
+  changed_when: false
+  # skip mechanism: if the query cannot run (e.g. IPA momentarily unreachable), the deletion gate below skips instead of failing the play
+  failed_when: false
   no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}"
 
@@ -18,14 +20,13 @@
   freeipa.ansible_freeipa.ipadnsrecord:
     ipaadmin_password: "{{ company_realm_password }}"
     ipaapi_context: server
-    zone_name: "{{ nameserver_current_host_ip | ansible.utils.ipsubnet(24) | replace('.0/24', '') }}.in-addr.arpa"
+    zone_name: "{{ nameserver_current_host_ip.split('.')[:nameserver_reverse_zone_prefix // 8][::-1] | join('.') }}.in-addr.arpa"
     record_type: PTR
-    name: "{{ outdated_record_ip.msg | ansible.utils.ipaddr('revdns') | replace('.in-addr.arpa.', '') | ansible.utils.ipsubnet(8) | replace('0.0.0/8', '') }}"
+    name: "{{ outdated_record_ip.stdout.split('.')[nameserver_reverse_zone_prefix // 8:][::-1] | join('.') }}"
     state: absent
   when:
-   - outdated_record_ip.rc != 1
+   - outdated_record_ip.rc == 0
+   - outdated_record_ip.stdout != ''
    - nameserver_current_host_ip != outdated_record_ip.stdout
-   - outdated_record_ip.stdout != ""
-   - outdated_record_ip.stdout is defined
   no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}"

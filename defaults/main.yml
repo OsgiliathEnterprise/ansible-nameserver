@@ -6,3 +6,4 @@ company_realm_password: "123ADMin"
 bind_pri_domain_name: "{{ company_domain }}"
 secure_logs: Yes
 skip_nameserver_assert: false
+nameserver_reverse_zone_prefix: 24

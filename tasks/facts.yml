@@ -3,6 +3,7 @@
 - name: Facts | get current hostname
   ansible.builtin.command: "hostname"
   register: nameserver_machine_hostname
+  # read-only: reading the hostname has no persistent side effect
   changed_when: false
 
 - name: Facts | retrieve client machine ip
@@ -45,5 +46,5 @@
 
 - name: Facts | debug dns zone creation
   ansible.builtin.debug:
-    msg: "echo '{{ nameserver_current_host_ip | ansible.utils.ipsubnet(8) }}'"
+    msg: "echo '{{ nameserver_current_host_ip | ansible.utils.ipsubnet(nameserver_reverse_zone_prefix) }}'"
     verbosity: 2
