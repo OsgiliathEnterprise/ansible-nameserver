@@ -12,7 +12,7 @@
 
 - name: Ipa_server | Display ptr zone name.
   ansible.builtin.debug:
-    msg: "PTR Zone: {{ nameserver_current_host_ip.split('.')[:nameserver_reverse_zone_prefix // 8][::-1] | join('.') }}.in-addr.arpa"
+    msg: "PTR Zone: {{ nameserver_current_host_ip.split('.')[: nameserver_reverse_zone_prefix // 8][::-1] | join('.') }}.in-addr.arpa"
     verbosity: 1
 
 - name: Ipa_server | Display ptr zone name.

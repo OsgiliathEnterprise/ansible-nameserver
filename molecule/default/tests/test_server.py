@@ -6,7 +6,8 @@ testinfra_hosts = ["idm.osgiliath.test"]
 
 # Mirrors the role's ``nameserver_reverse_zone_prefix`` default (24). Set the
 # environment variable when a scenario overrides the prefix in its converge.
-REVERSE_ZONE_PREFIX = int(os.environ.get("NAMESERVER_REVERSE_ZONE_PREFIX", "24"))
+REVERSE_ZONE_PREFIX = \
+    (int(os.environ.get("NAMESERVER_REVERSE_ZONE_PREFIX", "24")))
 
 
 def _kinit():
