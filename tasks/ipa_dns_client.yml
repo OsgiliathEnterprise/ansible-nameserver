@@ -12,7 +12,7 @@
     ipaapi_context: server
     state: present
   no_log: "{{ secure_logs }}"
-  delegate_to: "{{ groups[idm_group][0] }}"
+  delegate_to: "{{ groups[idm_group] | first }}"
 
 - name: Ipa_dns_client | remove potentially outdated ptr entries
   ansible.builtin.include_tasks: delete-outdated-ptr.yml
@@ -26,7 +26,7 @@
     a_rec: "{{ nameserver_current_host_ip }}"
     state: present
   no_log: "{{ secure_logs }}"
-  delegate_to: "{{ groups[idm_group][0] }}"
+  delegate_to: "{{ groups[idm_group] | first }}"
 
 - name: Ipa_dns_client | ensure reverse dns entry is created
   freeipa.ansible_freeipa.ipadnsrecord:
@@ -38,4 +38,4 @@
     name: "{{ nameserver_current_host_ip.split('.')[nameserver_reverse_zone_prefix // 8:][::-1] | join('.') }}"
     state: present
   no_log: "{{ secure_logs }}"
-  delegate_to: "{{ groups[idm_group][0] }}"
+  delegate_to: "{{ groups[idm_group] | first }}"
